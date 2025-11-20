@@ -1,0 +1,78 @@
+/* Reset-ish */
+* {box-sizing: border-box; margin:0; padding:0}
+html,body{height:100%;font-family:Inter,Segoe UI, system-ui, -apple-system, "Helvetica Neue", Arial; color:#1f2d3d}
+
+/* layout */
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+
+/* Top thin bar */
+.topbar{background:#0f1724;color:#fff;font-size:13px}
+.topbar .container{display:flex;justify-content:space-between;align-items:center;padding:6px 20px}
+.topbar-left{font-weight:600}
+
+/* Header / nav */
+.site-header{background:#fff;box-shadow:0 1px 0 rgba(0,0,0,0.06)}
+.nav-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:44px;height:44px;object-fit:cover;border-radius:6px}
+.brand-text strong{display:block}
+.brand-text small{display:block;font-size:12px;color:#6b7280}
+
+/* Nav links */
+.main-nav{display:flex;gap:18px;align-items:center}
+.main-nav a{color:#1f2d3d;text-decoration:none;padding:8px 10px;border-radius:6px;font-weight:500}
+.main-nav a.active{color:#0f1724}
+.nav-cta .btn{margin-left:12px}
+
+/* Responsive toggle */
+.nav-toggle{display:none;background:none;border:0;font-size:20px}
+
+/* Hero */
+.hero{
+  min-height:420px;
+  background-image: url("../images/hero.jpg");
+  background-size:cover;
+  background-position:center;
+  position:relative;
+  display:flex;
+  align-items:center;
+}
+.hero-overlay{
+  position:absolute;inset:0;background:linear-gradient(180deg, rgba(6,21,44,0.85), rgba(6,21,44,0.75));
+}
+.hero-inner{position:relative;color:#fff;text-align:center;padding:80px 20px}
+.hero h1{font-size:38px;letter-spacing:0.6px;margin-bottom:12px}
+.hero-sub{opacity:0.95;margin-bottom:22px}
+.hero .verse{display:block;color:#cbd5e1;margin-top:8px;font-size:14px}
+.hero-cta .btn{margin:6px}
+
+/* Buttons */
+.btn{display:inline-block;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:600}
+.btn-primary{background:#fbbf24;color:#10233a}
+.btn-outline{border:2px solid rgba(255,255,255,0.14);color:#fff;background:transparent}
+.btn-accent{background:#f59e0b;color:#09202f}
+
+/* Mission section */
+.mission{padding:60px 20px 40px;background:#fcfbf8;text-align:center}
+.section-title{font-size:22px;margin-bottom:8px}
+.lead{color:#6b7280;margin-bottom:26px}
+.cards{display:grid;gap:18px;grid-template-columns:repeat(3,1fr);margin-top:18px}
+.card{background:#fff;padding:22px;border-radius:10px;box-shadow:0 6px 18px rgba(28,45,64,0.06);text-align:left}
+.card-icon{font-size:20px;margin-bottom:10px;display:inline-block;padding:8px;border-radius:8px;background:#eef2ff}
+
+/* Callout band */
+.callout{background:linear-gradient(90deg,#0f1724,#1e3a8a);color:#fff;padding:44px 20px;text-align:center;margin-top:28px}
+.callout .btn{margin-top:12px}
+
+/* Footer */
+.site-footer{padding:18px 0;background:#0b1220;color:#cbd5e1;font-size:14px}
+.site-footer .container{display:flex;justify-content:space-between;align-items:center}
+
+/* Responsive */
+@media (max-width:900px){
+  .cards{grid-template-columns:repeat(1,1fr)}
+  .main-nav{display:none}
+  .nav-toggle{display:block}
+  .brand-text small{display:none}
+  .hero h1{font-size:28px}
+}

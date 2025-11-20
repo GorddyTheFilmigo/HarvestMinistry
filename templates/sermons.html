@@ -1,0 +1,776 @@
+{% extends "base.html" %}
+{% block title %}Sermons & Media{% endblock %}
+
+{% block content %}
+<style>
+  :root {
+    --ministry-primary: #1e3a8a;
+    --ministry-secondary: #3b82f6;
+    --ministry-gold: #f59e0b;
+    --ministry-red: #dc2626;
+    --ministry-light: #eff6ff;
+    --text-dark: #1f2937;
+    --text-muted: #6b7280;
+    --border-color: #e5e7eb;
+  }
+
+  /* Hero Section */
+  .media-hero {
+    background: linear-gradient(135deg, var(--ministry-primary) 0%, var(--ministry-secondary) 100%);
+    color: white;
+    padding: 80px 20px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .media-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="80" height="80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+    opacity: 0.5;
+  }
+
+  .media-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .media-hero h1 {
+    font-size: 2.75rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .media-hero .lead {
+    font-size: 1.25rem;
+    opacity: 0.95;
+    margin-bottom: 30px;
+  }
+
+  /* Live Stream Button */
+  .live-stream-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: linear-gradient(135deg, var(--ministry-red) 0%, #b91c1c 100%);
+    color: white;
+    font-weight: 700;
+    padding: 16px 32px;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 8px 16px rgba(220, 38, 38, 0.3);
+    transition: all 0.3s ease;
+    font-size: 1.125rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .live-stream-btn:hover {
+    background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(220, 38, 38, 0.4);
+    color: white;
+  }
+
+  .live-dot {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background-color: #fca5a5;
+    border-radius: 50%;
+    animation: livePulse 2s infinite;
+  }
+
+  @keyframes livePulse {
+    0% { 
+      box-shadow: 0 0 0 0 rgba(252, 165, 165, 0.7);
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 0 0 0 8px rgba(252, 165, 165, 0);
+      transform: scale(1.1);
+    }
+    100% { 
+      box-shadow: 0 0 0 0 rgba(252, 165, 165, 0);
+      transform: scale(1);
+    }
+  }
+
+  /* Filter Section */
+  .filter-section {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    margin-bottom: 40px;
+    border: 1px solid var(--border-color);
+  }
+
+  .filter-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .filter-btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    background: white;
+    color: var(--text-dark);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--ministry-secondary);
+    background: var(--ministry-light);
+    transform: translateY(-2px);
+  }
+
+  .filter-btn.active {
+    background: var(--ministry-primary);
+    border-color: var(--ministry-primary);
+    color: white;
+    box-shadow: 0 4px 8px rgba(30, 58, 138, 0.3);
+  }
+
+  .filter-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.1);
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  .filter-btn.active .filter-count {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  /* Content Section */
+  .media-content {
+    padding: 60px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    background: var(--ministry-light);
+    border-radius: 12px;
+    border: 2px dashed var(--border-color);
+  }
+
+  .empty-state-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.5;
+  }
+
+  .empty-state h3 {
+    color: var(--text-muted);
+    font-size: 1.5rem;
+    margin: 0;
+  }
+
+  /* Sermon Grid */
+  .sermon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+  }
+
+  /* Sermon Card */
+  .sermon-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .sermon-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    border-color: var(--ministry-secondary);
+  }
+
+  .sermon-card.hidden {
+    display: none;
+  }
+
+  .sermon-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    gap: 15px;
+  }
+
+  .sermon-title {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--ministry-primary);
+    margin: 0;
+    line-height: 1.3;
+    flex: 1;
+  }
+
+  .sermon-date {
+    background: var(--ministry-light);
+    color: var(--ministry-primary);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .sermon-description {
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin: 0 0 20px 0;
+    font-size: 0.95rem;
+    flex-grow: 1;
+  }
+
+  .sermon-media {
+    margin: 20px 0;
+  }
+
+  /* Media Elements */
+  audio, video {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    background: #000;
+  }
+
+  audio {
+    height: 48px;
+  }
+
+  .sermon-image {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* File Type Badge */
+  .file-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .badge-pdf {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .badge-documents {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+
+  .badge-audio {
+    background: #f3e8ff;
+    color: #6b21a8;
+  }
+
+  /* PDF Preview Thumbnail */
+  .pdf-preview {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    border: 2px solid #fca5a5;
+  }
+
+  .pdf-preview-icon {
+    font-size: 4rem;
+    opacity: 0.7;
+  }
+
+  /* Document Preview Thumbnail */
+  .document-preview {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    border: 2px solid #93c5fd;
+  }
+
+  .document-preview-icon {
+    font-size: 4rem;
+    opacity: 0.7;
+  }
+
+  /* Audio Visualization */
+  .audio-preview {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    border: 2px solid #d8b4fe;
+    gap: 15px;
+  }
+
+  .audio-preview-icon {
+    font-size: 3.5rem;
+    opacity: 0.8;
+  }
+
+  .audio-waves {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    height: 40px;
+  }
+
+  .audio-wave {
+    width: 4px;
+    background: #9333ea;
+    border-radius: 2px;
+    animation: audioWave 1s ease-in-out infinite;
+  }
+
+  .audio-wave:nth-child(1) { height: 20px; animation-delay: 0s; }
+  .audio-wave:nth-child(2) { height: 35px; animation-delay: 0.1s; }
+  .audio-wave:nth-child(3) { height: 25px; animation-delay: 0.2s; }
+  .audio-wave:nth-child(4) { height: 40px; animation-delay: 0.3s; }
+  .audio-wave:nth-child(5) { height: 30px; animation-delay: 0.4s; }
+  .audio-wave:nth-child(6) { height: 35px; animation-delay: 0.5s; }
+  .audio-wave:nth-child(7) { height: 25px; animation-delay: 0.6s; }
+
+  @keyframes audioWave {
+    0%, 100% { transform: scaleY(1); opacity: 0.5; }
+    50% { transform: scaleY(1.5); opacity: 1; }
+  }
+
+  .badge-video {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .badge-images {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  /* Action Buttons */
+  .sermon-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: auto;
+  }
+
+  .btn-main {
+    flex: 1;
+    min-width: 120px;
+    background: var(--ministry-primary);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .btn-main:hover {
+    background: #233da2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(30, 58, 138, 0.3);
+    color: white;
+  }
+
+  .btn-outline {
+    flex: 1;
+    min-width: 120px;
+    border: 2px solid var(--ministry-primary);
+    background: white;
+    color: var(--ministry-primary);
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .btn-outline:hover {
+    background: var(--ministry-primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(30, 58, 138, 0.3);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .media-hero {
+      padding: 60px 20px 40px;
+    }
+
+    .media-hero h1 {
+      font-size: 2rem;
+    }
+
+    .media-hero .lead {
+      font-size: 1.125rem;
+    }
+
+    .filter-section {
+      padding: 20px;
+    }
+
+    .filter-buttons {
+      gap: 10px;
+    }
+
+    .filter-btn {
+      padding: 10px 18px;
+      font-size: 0.9rem;
+    }
+
+    .sermon-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .sermon-card {
+      padding: 24px;
+    }
+
+    .sermon-header {
+      flex-direction: column;
+    }
+
+    .sermon-date {
+      align-self: flex-start;
+    }
+
+    .live-stream-btn {
+      padding: 14px 28px;
+      font-size: 1rem;
+    }
+
+    .sermon-actions {
+      flex-direction: column;
+    }
+
+    .btn-main,
+    .btn-outline {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  function filterSermons(type) {
+    // Update active button state
+    const buttons = document.querySelectorAll('.filter-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.closest('.filter-btn').classList.add('active');
+
+    // Filter sermon cards
+    const cards = document.querySelectorAll('.sermon-card');
+    cards.forEach(card => {
+      if (type === 'all') {
+        card.classList.remove('hidden');
+      } else {
+        if (card.dataset.fileType === type) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      }
+    });
+  }
+</script>
+
+<!-- Hero Section -->
+
+<div class="media-hero" style="background: url('{{ url_for('static', filename='images/hero.jpg') }}') center/cover no-repeat;">
+  <div class="media-hero-content">
+    <h1>📖 Sermons & Media</h1>
+    <p class="lead" style="color:white">
+      Browse our collection of sermons, audio teachings, videos, and ministry resources
+    </p>
+    <a href="{{ url_for('live_stream') }}" class="live-stream-btn">
+      <span class="live-dot"></span>
+      Watch Live Stream
+    </a>
+  </div>
+</div>
+
+<!-- Content Section -->
+<div class="media-content">
+  <div class="container">
+    {% if sermons|length == 0 %}
+      <div class="empty-state">
+        <div class="empty-state-icon">📚</div>
+        <h3>No sermons uploaded yet</h3>
+        <p style="color: var(--text-muted); margin-top: 10px;">
+          Check back soon for inspiring messages and teachings
+        </p>
+      </div>
+    {% else %}
+      <!-- Filter Section -->
+      <div class="filter-section">
+        <div class="filter-title">
+          🔍 Filter by Type
+        </div>
+        <div class="filter-buttons">
+          <button class="filter-btn active" onclick="filterSermons('all')">
+            <span>All Media</span>
+            <span class="filter-count">{{ sermons|length }}</span>
+          </button>
+          {% set pdf_count = sermons|selectattr('file_type', 'equalto', 'pdf')|list|length %}
+          {% if pdf_count > 0 %}
+          <button class="filter-btn" onclick="filterSermons('pdf')">
+            <span>📄 PDF</span>
+            <span class="filter-count">{{ pdf_count }}</span>
+          </button>
+          {% endif %}
+          
+          {% set doc_count = sermons|selectattr('file_type', 'equalto', 'documents')|list|length %}
+          {% if doc_count > 0 %}
+          <button class="filter-btn" onclick="filterSermons('documents')">
+            <span>📝 Documents</span>
+            <span class="filter-count">{{ doc_count }}</span>
+          </button>
+          {% endif %}
+          
+          {% set audio_count = sermons|selectattr('file_type', 'equalto', 'audio')|list|length %}
+          {% if audio_count > 0 %}
+          <button class="filter-btn" onclick="filterSermons('audio')">
+            <span>🎵 Audio</span>
+            <span class="filter-count">{{ audio_count }}</span>
+          </button>
+          {% endif %}
+          
+          {% set video_count = sermons|selectattr('file_type', 'equalto', 'video')|list|length %}
+          {% if video_count > 0 %}
+          <button class="filter-btn" onclick="filterSermons('video')">
+            <span>🎬 Video</span>
+            <span class="filter-count">{{ video_count }}</span>
+          </button>
+          {% endif %}
+          
+          {% set image_count = sermons|selectattr('file_type', 'equalto', 'images')|list|length %}
+          {% if image_count > 0 %}
+          <button class="filter-btn" onclick="filterSermons('images')">
+            <span>🖼️ Images</span>
+            <span class="filter-count">{{ image_count }}</span>
+          </button>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Sermon Grid -->
+      <div class="sermon-grid">
+        {% for s in sermons %}
+        <div class="sermon-card" data-file-type="{{ s.file_type }}">
+          <div class="sermon-header">
+            <h3 class="sermon-title">{{ s.title }}</h3>
+            <span class="sermon-date">{{ s.uploaded_at[:10] }}</span>
+          </div>
+
+          <p class="sermon-description">
+            {{ s.description or "Experience this powerful message from our ministry." }}
+          </p>
+
+          <!-- File Type Badge -->
+          <div class="file-type-badge badge-{{ s.file_type }}">
+            {% if s.file_type == 'pdf' %}
+              📄 PDF Document
+            {% elif s.file_type == 'documents' %}
+              📝 Document
+            {% elif s.file_type == 'audio' %}
+              🎵 Audio Message
+            {% elif s.file_type == 'video' %}
+              🎬 Video Sermon
+            {% elif s.file_type == 'images' %}
+              🖼️ Image
+            {% endif %}
+          </div>
+
+          <!-- Media Content -->
+          <div class="sermon-media">
+            <!-- PDF -->
+            {% if s.file_type == 'pdf' %}
+              <div class="pdf-preview">
+                <div class="pdf-preview-icon">📄</div>
+              </div>
+              <div class="sermon-actions">
+                <a class="btn-outline" 
+                   href="{{ url_for('serve_pdf', filename=s.filename) }}" 
+                   target="_blank">
+                  👁️ View PDF
+                </a>
+                <a class="btn-main" 
+                   href="{{ url_for('serve_pdf', filename=s.filename) }}" 
+                   download>
+                  ⬇️ Download
+                </a>
+              </div>
+
+            <!-- DOCUMENTS -->
+            {% elif s.file_type == 'documents' %}
+              <div class="document-preview">
+                <div class="document-preview-icon">📝</div>
+              </div>
+              <div class="sermon-actions">
+                <a class="btn-outline" 
+                   href="{{ url_for('serve_document', filename=s.filename) }}" 
+                   target="_blank">
+                  📄 View
+                </a>
+                <a class="btn-main" 
+                   href="{{ url_for('serve_document', filename=s.filename) }}" 
+                   download>
+                  ⬇️ Download
+                </a>
+              </div>
+
+            <!-- AUDIO -->
+            {% elif s.file_type == 'audio' %}
+              <div class="audio-preview">
+                <div class="audio-preview-icon">🎵</div>
+                <div class="audio-waves">
+                  <div class="audio-wave"></div>
+                  <div class="audio-wave"></div>
+                  <div class="audio-wave"></div>
+                  <div class="audio-wave"></div>
+                  <div class="audio-wave"></div>
+                  <div class="audio-wave"></div>
+                  <div class="audio-wave"></div>
+                </div>
+              </div>
+              <audio controls>
+                <source src="{{ url_for('serve_audio', filename=s.filename) }}">
+                Your browser does not support the audio element.
+              </audio>
+              <div class="sermon-actions">
+                <a class="btn-outline" 
+                   href="{{ url_for('serve_audio', filename=s.filename) }}" 
+                   target="_blank">
+                  🎧 Listen
+                </a>
+                <a class="btn-main" 
+                   href="{{ url_for('serve_audio', filename=s.filename) }}" 
+                   download>
+                  ⬇️ Download
+                </a>
+              </div>
+
+            <!-- VIDEO -->
+            {% elif s.file_type == 'video' %}
+              <video controls>
+                <source src="{{ url_for('serve_video', filename=s.filename) }}">
+                Your browser does not support the video element.
+              </video>
+              <div class="sermon-actions">
+                <a class="btn-outline" 
+                   href="{{ url_for('serve_video', filename=s.filename) }}" 
+                   target="_blank">
+                  ▶️ Watch
+                </a>
+                <a class="btn-main" 
+                   href="{{ url_for('serve_video', filename=s.filename) }}" 
+                   download>
+                  ⬇️ Download
+                </a>
+              </div>
+
+            <!-- IMAGES -->
+            {% elif s.file_type == 'images' %}
+              <img src="{{ url_for('serve_image', filename=s.filename) }}" 
+                   alt="{{ s.title }}"
+                   class="sermon-image">
+              <div class="sermon-actions">
+                <a class="btn-outline" 
+                   href="{{ url_for('serve_image', filename=s.filename) }}" 
+                   target="_blank">
+                  👁️ View Full
+                </a>
+                <a class="btn-main" 
+                   href="{{ url_for('serve_image', filename=s.filename) }}" 
+                   download>
+                  ⬇️ Download
+                </a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

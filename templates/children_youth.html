@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% block title %}Children & Youth Ministry | The Lord's Harvest Ministry{% endblock %}
+
+{% block content %}
+<script defer src="{{ url_for('static', filename='js/main.js') }}"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --primary: #5D3FD3;
+    --secondary: #FF6B6B;
+    --dark: #2c3e50;
+    --light: #f8f9fa;
+    --gray: #6c757d;
+  }
+
+  * { box-sizing: border-box; margin:0; padding:0; }
+  html, body { font-family: 'Poppins', sans-serif; color: var(--dark); background: #fff; line-height: 1.6; }
+
+  .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(rgba(93,63,211,0.85), rgba(93,63,211,0.85)),
+                url('{{ url_for("static", filename="images/hero1.PNG") }}') center/cover no-repeat;
+    color: white; text-align: center; padding: 120px 20px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+  }
+  .hero h1 { font-size: 3rem; font-weight: 700; margin-bottom: 1rem; text-shadow: 0 3px 10px rgba(0,0,0,0.3);}
+  .hero p { font-size: 1.25rem; max-width: 650px; text-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+
+  section { padding: 80px 0; }
+  .section-title {
+    text-align: center; font-size: 2.5rem; margin-bottom: 15px; color: var(--primary);
+    font-weight: 600;
+  }
+  .section-subtitle {
+    text-align: center; font-size: 1.1rem; color: var(--gray); max-width: 800px; margin: 0 auto 50px;
+  }
+
+  /* Children's Ministry Cards */
+  .ministry-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;
+  }
+  .ministry-card {
+    background: white; border-radius: 16px; overflow: hidden; 
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08); 
+    transition: all 0.3s ease;
+    text-decoration: none; color: inherit;
+  }
+  .ministry-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.12);}
+  .ministry-card img { width: 100%; height: 220px; object-fit: cover; }
+  .card-content { padding: 25px; }
+  .card-content h3 { font-size: 1.5rem; margin-bottom: 10px; color: var(--primary); font-weight: 600; }
+  .card-content p { color: var(--dark); font-size: 0.95rem; }
+  .age-group {
+    display: inline-block; background: var(--secondary); color: white; padding: 6px 14px;
+    border-radius: 30px; font-size: 0.85rem; margin-bottom: 12px;
+  }
+
+  /* Programs & Events */
+  .programs { background: #f9f3ff; }
+  .program-list {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;
+  }
+  .program-item {
+    background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .program-item:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(0,0,0,0.1);}
+  .program-item h4 { color: var(--primary); margin-bottom: 8px; font-size: 1.25rem; }
+  .time { color: var(--secondary); font-weight: 600; }
+
+  /* Youth Events */
+  .events-section { background: white; }
+  .event-card {
+    background: #f9f3ff; padding: 25px; border-radius: 16px;
+    border-left: 6px solid var(--primary); margin-bottom: 20px; transition: transform 0.3s;
+  }
+  .event-card:hover { transform: translateX(5px); }
+  .event-card h3 { margin: 0 0 8px; color: var(--primary); font-size: 1.5rem; }
+  .event-meta { font-weight: 600; color: var(--secondary); margin-bottom: 12px; }
+
+  /* Leaders */
+  .leaders { background: var(--light); }
+  .leader-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; text-align: center;
+  }
+  .leader-card {
+    background: white; padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .leader-card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.1);}
+  .leader-card img {
+    width: 140px; height: 140px; border-radius: 50%; object-fit: cover;
+    border: 4px solid var(--primary); margin-bottom: 12px;
+  }
+  .leader-card h4 { font-size: 1.2rem; color: var(--primary); margin-bottom: 5px; font-weight: 600; }
+  .leader-card p { color: var(--gray); font-size: 0.95rem; }
+
+  /* CTA */
+  .cta { background: var(--primary); color: white; text-align: center; padding: 80px 20px; }
+  .cta h2 { font-size: 2rem; font-weight: 600; margin-bottom: 15px; }
+  .cta p { font-size: 1.15rem; max-width: 600px; margin: 0 auto 20px; }
+  .btn {
+    display: inline-block; background: white; color: var(--primary); padding: 14px 36px;
+    border-radius: 50px; font-weight: 600; text-decoration: none; margin-top: 10px; transition: all 0.3s;
+  }
+  .btn:hover { background: var(--secondary); color: white; transform: scale(1.05); }
+  .btn-outline { background: transparent; border: 2px solid white; margin-left: 15px; }
+
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 2.2rem; }
+    .section-title { font-size: 2rem; }
+    .program-list, .ministry-grid, .leader-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="container">
+    <h1 style="text-align:center;">Children & Youth Ministry</h1>
+    <p style="text-align:center;">Building a strong foundation in Christ through fun, faith, and fellowship for the next generation.</p>
+  </div>
+</header>
+
+<div class="container">
+  <!-- Children's Ministry Section -->
+  <section id="children">
+    <h2 class="section-title">Children's Ministry (Ages 0–12)</h2>
+    <p class="section-subtitle">
+      We believe children are a heritage from the Lord. Our classes are safe, exciting, and filled with Bible truths taught creatively.
+    </p>
+
+    <div class="ministry-grid">
+      <a href="#" class="ministry-card">
+        <img src="https://images.unsplash.com/photo-1577896851228-2c75a19f1ab8?ixlib=rb-4.0.3&auto=format&fit=crop&q=80" alt="Nursery">
+        <div class="card-content">
+          <span class="age-group">Ages 0–3</span>
+          <h3>Little Lambs Nursery</h3>
+          <p>Loving care with age-appropriate toys, songs, and Bible stories.</p>
+        </div>
+      </a>
+
+      <a href="#" class="ministry-card">
+        <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?ixlib=rb-4.0.3&auto=format&fit=crop&q=80" alt="Preschool">
+        <div class="card-content">
+          <span class="age-group">Ages 4–6</span>
+          <h3>Sunshine Kids (Preschool)</h3>
+          <p>Fun Bible lessons, crafts, memory verses, and snacks every Sunday.</p>
+        </div>
+      </a>
+
+      <a href="#" class="ministry-card">
+        <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?ixlib=rb-4.0.3&auto=format&fit=crop&q=80" alt="Elementary">
+        <div class="card-content">
+          <span class="age-group">Ages 7–12</span>
+          <h3>Champions Club (Elementary)</h3>
+          <p>Interactive Bible teaching, games, worship, and life application lessons.</p>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Youth Programs -->
+  <section id="youth" class="programs">
+    <h2 class="section-title">Youth Ministry (Ages 13–18)</h2>
+    <p class="section-subtitle">Empowering teenagers to know Christ, grow in faith, and impact their world.</p>
+
+    <div class="program-list">
+      <div class="program-item">
+        <h4>IGNITE Youth Service</h4>
+        <p class="time">Every Friday • 7:00 PM – 9:00 PM</p>
+        <p>Dynamic worship, relevant messages, small groups, games & food.</p>
+      </div>
+      <div class="program-item">
+        <h4>Bible Study & Discipleship</h4>
+        <p class="time">Wednesdays • 6:30 PM</p>
+        <p>Deep dive into Scripture, prayer, and real-talk about life as a Christian teen.</p>
+      </div>
+      <div class="program-item">
+        <h4>Outreach & Missions</h4>
+        <p class="time">Monthly Projects</p>
+        <p>Community service, evangelism training, and mission trips.</p>
+      </div>
+      <div class="program-item">
+        <h4>Youth Worship Team</h4>
+        <p class="time">Practices: Thursdays 6 PM</p>
+        <p>Gifted teens leading powerful worship for IGNITE and Sunday services.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Youth Events -->
+  <section class="events-section">
+    <h2 class="section-title">Upcoming Youth Events</h2>
+    <p class="section-subtitle">Join us for powerful gatherings that will ignite your faith!</p>
+
+    {% if youth_events %}
+      {% for event in youth_events %}
+      <div class="event-card">
+        <h3>{{ event.title }}</h3>
+        <p class="event-meta">{{ event.date }} • {{ event.time }}</p>
+        {% if event.description %}<p>{{ event.description }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <p style="text-align:center; color:#888; font-style:italic;">No upcoming events announced yet. Check back soon!</p>
+    {% endif %}
+  </section>
+
+  <!-- Leaders -->
+  <section class="leaders">
+    <h2 class="section-title">Meet Our Leaders</h2>
+    <p class="section-subtitle">Passionate, vetted, and called servants of God who love the next generation.</p>
+
+    <div class="leader-grid">
+      {% for leader in youth_leaders %}
+      <div class="leader-card">
+        <img src="{{ leader.photo }}" alt="{{ leader.name }}">
+        <h4>{{ leader.name }}</h4>
+        <p>{{ leader.role }}</p>
+      </div>
+      {% else %}
+      <p style="grid-column: 1 / -1; text-align: center; color: #888; font-style: italic;">
+        Leaders will be announced soon...
+      </p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="cta">
+    <h2>Join Us This Week!</h2>
+    <p>Bring your children and teens — they’ll love it, and you’ll be glad you came.</p>
+    <a href="{{ url_for('contact') }}" class="btn">Plan Your Visit</a>
+    <a href="{{ url_for('contact') }}" class="btn btn-outline">Contact Ministry Team</a>
+  </section>
+</div>
+{% endblock %}

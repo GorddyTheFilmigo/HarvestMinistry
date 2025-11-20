@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block title %}Live Stream - The Lords Harvest Ministry{% endblock %}
+
+{% block content %}
+<style>
+  .stream-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+  
+  .stream-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .stream-header h1 {
+    color: #1e3a8a;
+    margin-bottom: 10px;
+  }
+  
+  .live-badge {
+    display: inline-block;
+    background: #ef4444;
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+  
+  .offline-badge {
+    display: inline-block;
+    background: #6b7280;
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  
+  .video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    background: #000;
+    border-radius: 10px;
+    margin: 30px 0;
+  }
+  
+  .video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+  
+  .stream-info {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-top: 30px;
+  }
+  
+  .chat-section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-top: 20px;
+    min-height: 400px;
+  }
+  
+  .schedule-box {
+    background: #f0f9ff;
+    border-left: 4px solid #1e3a8a;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 6px;
+  }
+  
+  .offline-message {
+    text-align: center;
+    padding: 60px 20px;
+    background: #f9fafb;
+    border-radius: 10px;
+  }
+  
+  .offline-message h2 {
+    color: #374151;
+    margin-bottom: 10px;
+  }
+</style>
+
+<div class="stream-container">
+  <div class="stream-header">
+    <h1>🎥 Live Stream</h1>
+    
+    {% if stream.is_live %}
+      <span class="live-badge">🔴 LIVE NOW</span>
+    {% else %}
+      <span class="offline-badge">⏸️ Offline</span>
+    {% endif %}
+    
+    <p style="color: #666; margin-top: 10px;">{{ stream.description }}</p>
+  </div>
+
+  {% if stream.is_live %}
+    <!-- YouTube Live Embed -->
+    <div class="video-wrapper">
+      <iframe 
+        src="https://www.youtube.com/embed/{{ stream.youtube_video_id }}?autoplay=1&modestbranding=1" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+      </iframe>
+    </div>
+    
+    <!-- Stream Info -->
+    <div class="stream-info">
+      <h3>{{ stream.title }}</h3>
+      <p>{{ stream.description }}</p>
+      
+      <div style="margin-top: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
+        <a href="https://www.youtube.com/watch?v={{ stream.youtube_video_id }}" 
+           target="_blank" 
+           class="btn btn-primary">
+          📺 Watch on YouTube
+        </a>
+        <button onclick="shareStream()" class="btn btn-outline">
+          🔗 Share Stream
+        </button>
+      </div>
+    </div>
+    
+    <!-- Live Chat (YouTube) -->
+    <div class="chat-section">
+      <h3 style="margin-bottom: 15px;">💬 Live Chat</h3>
+      <iframe 
+        src="https://www.youtube.com/live_chat?v={{ stream.youtube_video_id }}&embed_domain={{ request.host }}"
+        style="width: 100%; height: 400px; border: none; border-radius: 6px;">
+      </iframe>
+    </div>
+    
+  {% else %}
+    <!-- Offline Message -->
+    <div class="offline-message">
+      <h2>Stream is currently offline</h2>
+      <p style="color: #666; margin: 15px 0;">We're not streaming right now, but check back soon!</p>
+      
+      <div class="schedule-box" style="max-width: 500px; margin: 30px auto;">
+        <h3 style="margin-bottom: 10px;">📅 Streaming Schedule</h3>
+        <p style="margin: 0;">{{ stream.schedule }}</p>
+      </div>
+      
+      <div style="margin-top: 30px;">
+        <a href="{{ url_for('sermons') }}" class="btn btn-primary">
+          📚 Watch Previous Sermons
+        </a>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+<script>
+function shareStream() {
+  const url = window.location.href;
+  if (navigator.share) {
+    navigator.share({
+      title: '{{ stream.title }}',
+      text: 'Join us for our live stream!',
+      url: url
+    });
+  } else {
+    // Fallback: copy to clipboard
+    navigator.clipboard.writeText(url);
+    alert('Stream link copied to clipboard!');
+  }
+}
+</script>
+{% endblock %}

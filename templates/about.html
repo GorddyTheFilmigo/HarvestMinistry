@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Sermons & Media{% endblock %}
+
+{% block content %}
+<body>
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="container">
+      <span>The Lords Harvest Ministry</span>
+      <span>Passion for the lost — Acts 13:47</span>
+    </div>
+  </div>
+  <!-- Banner -->
+  <section class="page-banner" style="
+     background: url('{{ url_for('static', filename='images/hero.jpg') }}') center/cover no-repeat;
+     padding: 80px 0;
+     position: relative;
+     color: white;
+     text-align: center;">
+    <div class="banner-overlay" style="position:absolute;inset:0;background:rgba(4,14,34,0.7);"></div>
+    <div class="container" style="position: relative;">
+      <h1>About Us</h1>
+      <p>Who We Are & What We Believe</p>
+    </div>
+  </section>
+  
+  <!-- About Content -->
+  <section class="container" style="padding: 50px 0;">
+    <h2 style="text-align:center;margin-bottom:20px;">Our Story</h2>
+    <p style="max-width:800px;margin:0 auto;text-align:center;color:#555;">
+      The Lords Harvest Ministry is a Christ-centered mission founded with a burning passion
+      to reach the lost, share the gospel, and build communities grounded in the Word of God.
+      Inspired by Acts 13:47, we embrace the mandate to be a light to the nations.
+    </p>
+    
+    <div style="margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;">
+      <div>
+        <h3>Our Vision</h3>
+        <p>
+          To see individuals, families, and nations transformed through the power of the gospel of Jesus Christ.
+        </p>
+        
+        <h3>Our Mission</h3>
+        <p>
+          To reach the lost, disciple believers, and empower communities through teaching, outreach, worship,
+          and compassionate service.
+        </p>
+        
+        <h3>Our Core Beliefs</h3>
+        <ul style="line-height:1.9;color:#444;">
+          <li>The Bible is the inspired Word of God</li>
+          <li>Salvation comes through Jesus Christ alone</li>
+          <li>We are called to evangelize and disciple</li>
+          <li>We value prayer, worship, community, and service</li>
+        </ul>
+      </div>
+      
+      <div>
+        <img src="{{ url_for('static', filename='images/hero.jpg') }}" alt="Ministry" style="width:100%;border-radius:10px;">
+      </div>
+    </div>
+  </section>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+{% endblock %}

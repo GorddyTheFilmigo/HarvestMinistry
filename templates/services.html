@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}The Lord's Harvest Ministry{% endblock %}
+
+{% block content %}
+
+  <!-- Banner -->
+  <section class="hero" style="background: url('{{ url_for('static', filename='images/hero.jpg') }}') center/cover no-repeat;">
+    <div class="banner-overlay" style="position:absolute;inset:0;background:rgba(4,14,34,0.7);"></div>
+    <div class="container" style="position:relative;">
+      <h1 style="color:white">Our Ministry Services</h1>
+      <p style="color:white">Serving God. Serving People. Transforming Lives.</p>
+    </div>
+  </section>
+
+  <!-- Services Overview -->
+<section class="container" style="padding:50px 0;">
+  <h2 class="section-title">What We Offer</h2>
+  <p class="lead" style="text-align:center;margin-bottom:40px;">
+    The Lords Harvest Ministry provides spiritual, social, and community-focused services
+    designed to uplift and transform lives.
+  </p>
+  <div class="cards">
+
+    <a href="/sermons" class="card-link">
+      <article class="card">
+        <div class="card-icon">🙏</div>
+        <h3>Sermons</h3>
+        <p>Spirit-filled Sunday worship with praise, worship, and powerful sermons grounded in Scripture.</p>
+      </article>
+    </a>
+
+    <a href="/bible-study" class="card-link">
+      <article class="card">
+        <div class="card-icon">📖</div>
+        <h3>Bible Study & Discipleship</h3>
+        <p>Weekly Bible study sessions aimed at deep spiritual growth and understanding of God’s Word.</p>
+      </article>
+    </a>
+
+    <a href="/outreach" class="card-link">
+      <article class="card">
+        <div class="card-icon">🤝</div>
+        <h3>Community Outreach</h3>
+        <p>Compassion-driven initiatives that bring hope to the needy, the sick, and the vulnerable.</p>
+      </article>
+    </a>
+
+    <a href="/worship-team" class="card-link">
+      <article class="card">
+        <div class="card-icon">🎶</div>
+        <h3>Music & Worship Team</h3>
+        <p>Dedicated worship ministry leading the congregation in praise with excellence and passion.</p>
+      </article>
+    </a>
+
+    <a href="{{ url_for('children_youth') }}" class="card-link">
+      <article class="card">
+        <div class="card-icon">🧒</div>
+        <h3>Children & Teens Ministry</h3>
+        <p>Raising godly children through teaching, mentorship, and engaging activities.</p>
+      </article>
+    </a>
+
+    <a href="/family-support" class="card-link">
+      <article class="card">
+        <div class="card-icon">👨‍👩‍👧</div>
+        <h3>Family Support Services</h3>
+        <p>Counseling, mentorship, and support for families facing challenges.</p>
+      </article>
+    </a>
+
+    <a href="/fellowships" class="card-link">
+      <article class="card">
+        <div class="card-icon">👨‍👩‍👧</div>
+        <h3>Women and Men Fellowships</h3>
+        <p>Empowering fellowship groups for spiritual growth, support, and community among men and women.</p>
+      </article>
+    </a>
+
+  </div>
+</section>
+
+  <!-- Weekly Program -->
+  <section class="callout" style="margin-top:20px;">
+    <div class="container">
+      <h2 style="margin-bottom:10px;">Weekly Church Program</h2>
+
+      <div style="max-width:700px;margin:0 auto;text-align:left;color:#e9eef7;line-height:1.9;">
+        <p><strong>Sunday Service:</strong> 9:00 AM — 12:00 PM</p>
+        <p><strong>Tuesday Bible Study:</strong> 5:00 PM — 7:00 PM</p>
+        <p><strong>Thursday Prayer Fellowship:</strong> 5:00 PM — 7:00 PM</p>
+        <p><strong>Youth Fellowship (Saturday):</strong> 2:00 PM — 5:00 PM</p>
+        <p><strong>Home Fellowships:</strong> Every Wednesday (Various locations)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Departments -->
+  <section class="container" style="padding:50px 0;">
+    <h2 class="section-title">Ministry Departments</h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:30px;">      
+      <div>
+        <h3>Evangelism & Missions</h3>
+        <p>Focused on spreading the gospel locally and globally.</p>
+
+        <h3>Intercessory Ministry</h3>
+        <p>Standing in the gap for the church, families, and nations.</p>
+
+        <h3>Ushering & Hospitality</h3>
+        <p>Warmly welcoming and serving members and visitors.</p>
+
+        <h3>Media & Technical Team</h3>
+        <p>Sound, projection, photography, videography, and livestream services.</p>
+      </div>
+
+      <div>
+        <h3>Children’s Ministry</h3>
+        <p>Teaching biblical foundations to the young generation.</p>
+
+        <h3>Teens & Youth Ministry</h3>
+        <p>Empowering young people through discipleship and mentorship.</p>
+
+        <h3>Women’s Ministry</h3>
+        <p>Encouraging women to grow spiritually and in fellowship.</p>
+
+        <h3>Men’s Fellowship</h3>
+        <p>Building strong men anchored in faith, leadership, and integrity.</p>
+      </div>
+    </div>
+  </section>
+
+ {% endblock %}

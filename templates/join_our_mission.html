@@ -1,0 +1,403 @@
+{% extends "base.html" %}
+{% block title %}Join Our Mission - The Lord's Harvest Ministry{% endblock %}
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+  :root {
+    --ministry-primary: #1e3a8a;
+    --ministry-secondary: #3b82f6;
+    --ministry-gold: #f59e0b;
+    --ministry-light: #eff6ff;
+    --text-dark: #1f2937;
+    --text-muted: #6b7280;
+    --success-green: #10b981;
+  }
+  .mission-hero {
+    background: linear-gradient(135deg, var(--ministry-primary) 0%, var(--ministry-secondary) 100%);
+    color: white;
+    padding: 100px 20px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .mission-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M50 10l5 15h16l-13 9 5 15-13-9-13 9 5-15-13-9h16z" fill="rgba(255,255,255,0.05)"/></svg>');
+    opacity: 0.3;
+  }
+  .mission-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .mission-hero h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+  .mission-hero .lead { font-size: 1.5rem; margin-bottom: 30px; opacity: 0.95; }
+  .hero-verse {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    padding: 25px 35px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.2);
+    max-width: 700px;
+    margin: 40px auto 0;
+    font-style: italic;
+    font-size: 1.125rem;
+  }
+  .section-header { text-align: center; margin-bottom: 60px; }
+  .section-header h2 { font-size: 2.5rem; font-weight: 700; color: var(--ministry-primary); margin-bottom: 15px; }
+  .section-header p { font-size: 1.125rem; color: var(--text-muted); max-width: 700px; margin: 0 auto; }
+  .way-card {
+    background: white;
+    border-radius: 16px;
+    padding: 40px 30px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+    transition: all 0.3s ease;
+    text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .way-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    border-color: var(--ministry-gold);
+  }
+  .way-icon {
+    width: 80px; height: 80px;
+    background: linear-gradient(135deg, var(--ministry-gold), #fbbf24);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    margin: 0 auto 25px;
+    box-shadow: 0 4px 12px rgba(245,158,11,0.3);
+  }
+  .way-card h3 { font-size: 1.5rem; font-weight: 700; color: var(--ministry-primary); margin-bottom: 15px; }
+  .way-card p { color: var(--text-muted); line-height: 1.7; margin-bottom: 25px; flex-grow: 1; }
+  .btn-join {
+    background: var(--ministry-primary);
+    color: white;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    transition: all 0.3s ease;
+  }
+  .btn-join:hover {
+    background: #15295c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(30,58,138,0.3);
+  }
+  .testimony-cta {
+    text-align: center;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, var(--ministry-light) 0%, #dbeafe 100%);
+    border-radius: 16px;
+    margin: 60px 0;
+  }
+  .testimony-cta h3 { font-size: 2rem; font-weight: 700; color: var(--ministry-primary); margin-bottom: 15px; }
+  .testimony-cta p { font-size: 1.125rem; color: var(--text-muted); margin-bottom: 30px; }
+  .btn-testimony {
+    background: var(--ministry-gold);
+    color: white;
+    padding: 18px 40px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.125rem;
+    border: none;
+    box-shadow: 0 4px 12px rgba(245,158,11,0.4);
+    transition: all 0.3s ease;
+  }
+  .btn-testimony:hover { background: #f97316; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(245,158,11,0.5); }
+  .testimonial-card {
+    background: var(--ministry-light);
+    padding: 35px;
+    border-radius: 16px;
+    border-left: 4px solid var(--ministry-gold);
+    position: relative;
+    height: 100%;
+    transition: all 0.3s ease;
+  }
+  .testimonial-card:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
+  .quote-icon { font-size: 3rem; color: var(--ministry-gold); opacity: 0.3; position: absolute; top: 20px; right: 25px; }
+  .testimonial-text { font-size: 1.05rem; line-height: 1.7; color: var(--text-dark); margin-bottom: 20px; font-style: italic; }
+  .testimonial-author { font-weight: 700; color: var(--ministry-primary); margin-bottom: 5px; font-size: 1.1rem; }
+  .testimonial-role { font-size: 0.9rem; color: var(--text-muted); }
+  .empty-testimonies { text-align: center; padding: 60px 20px; background: var(--ministry-light); border-radius: 12px; border: 2px dashed #e5e7eb; }
+  .empty-testimonies-icon { font-size: 4rem; margin-bottom: 20px; opacity: 0.5; }
+  .payment-btn { padding: 16px 24px; border-radius: 8px; font-weight: 600; font-size: 1rem; transition: all 0.3s ease; border: none; display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .payment-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+  .btn-paypal { background: #0070ba; color: white; }
+  .btn-paypal:hover { background: #005ea6; }
+  .btn-mpesa { background: #10b981; color: white; }
+  .btn-mpesa:hover { background: #059669; }
+  .btn-bank { background: var(--ministry-gold); color: white; }
+  .btn-bank:hover { background: #f97316; }
+  @media (max-width: 768px) {
+    .mission-hero { padding: 60px 20px 50px; }
+    .mission-hero h1 { font-size: 2.25rem; }
+    .mission-hero .lead { font-size: 1.125rem; }
+    .section-header h2 { font-size: 2rem; }
+    .way-card { padding: 30px 20px; }
+  }
+</style>
+
+<!-- Hero Section -->
+<section class="hero" style="background: url('{{ url_for('static', filename='images/hero.jpg') }}') center/cover no-repeat;">
+  <div class="mission-hero-content">
+    <h1 style="color:white;">Join Our Mission</h1>
+    <p class="lead" style="color:white">
+      Be part of something greater. Join us in spreading the Gospel and transforming lives through faith, service, and community.
+    </p>
+    <div class="hero-verse">
+      "Therefore go and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit."
+      <br><strong>— Matthew 28:19</strong>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content -->
+<div class="container py-5">
+
+  <!-- Ways to Join -->
+  <div class="section-header">
+    <h2>How You Can Get Involved</h2>
+    <p>There are many ways to participate in our ministry and make a meaningful impact</p>
+  </div>
+
+  <div class="row g-4 mb-5" style="color:rebeccapurple;font-weight: bolder;">
+    <!-- Volunteer -->
+    <div class="col-md-6 col-lg-3">
+      <div class="way-card" style="background: url('{{ url_for('static', filename='images/volunteer.JPG') }}') center/cover no-repeat;">
+        <div class="way-icon">Praying Hands</div>
+        <h3>Volunteer</h3>
+        <p>Use your talents and time to serve in various ministry departments.</p>
+        <button class="btn btn-join" data-bs-toggle="modal" data-bs-target="#volunteerModal">Join as Volunteer</button>
+      </div>
+    </div>
+    <!-- Give -->
+    <div class="col-md-6 col-lg-3">
+      <div class="way-card" style="background: url('{{ url_for('static', filename='images/give.JPG') }}') center/cover no-repeat;">
+        <div class="way-icon">Gift</div>
+        <h3>Give</h3>
+        <p>Support our ministry financially and help us reach more souls.</p>
+        <button class="btn btn-join" data-bs-toggle="modal" data-bs-target="#donateModal">Donate Now</button>
+      </div>
+    </div>
+    <!-- Teaching Ministry -->
+    <div class="col-md-6 col-lg-3">
+      <div class="way-card" style="background: url('{{ url_for('static', filename='images/teaching.JPG') }}') center/cover no-repeat;">
+        <div class="way-icon">Bible</div>
+        <h3>Teaching Ministry</h3>
+        <p>Help disciple others through teaching and mentoring.</p>
+        <button class="btn btn-join" data-bs-toggle="modal" data-bs-target="#ministerModal">Get Started</button>
+      </div>
+    </div>
+    <!-- PARTNERSHIP (NEW!) -->
+    <div class="col-md-6 col-lg-3">
+      <div class="way-card" style="background: url('{{ url_for('static', filename='images/patners.JPG') }}') center/cover no-repeat;">
+        <div class="way-icon">Hand Shake</div>
+        <h3>Partner With Us</h3>
+        <p>Churches, businesses, and organizations partnering together for greater Kingdom impact.</p>
+        <button class="btn btn-join" data-bs-toggle="modal" data-bs-target="#partnershipModal">
+          Become a Partner
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Share Testimony CTA -->
+  <div class="testimony-cta" style="background: url('{{ url_for('static', filename='images/testimony.JPG') }}') center/cover no-repeat;">
+    <h3>Share Your Testimony</h3>
+    <p>Has God transformed your life through this ministry? Inspire others by sharing your story!</p>
+    <button class="btn btn-testimony" data-bs-toggle="modal" data-bs-target="#testimonyModal">
+      Share Your Story
+    </button>
+  </div>
+
+  <!-- Testimonies Section -->
+  <div class="section-header">
+    <h2>Voices from Our Community</h2>
+    <p>Hear from those who have experienced God's transforming power through our ministry</p>
+  </div>
+  <div class="row g-4" id="testimoniesContainer">
+    {% with testimonies = get_testimonies() %}
+      {% if testimonies %}
+        {% for t in testimonies %}
+        <div class="col-md-6 col-lg-4">
+          <div class="testimonial-card">
+            <div class="quote-icon">"</div>
+            <p class="testimonial-text">"{{ t.message }}"</p>
+            <div class="testimonial-author">{{ t.name }}</div>
+            <div class="testimonial-role">{{ t.role or "Community Member" }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-12">
+          <div class="empty-testimonies">
+            <div class="empty-testimonies-icon">Speech Bubble</div>
+            <h3 style="color: var(--text-muted);">No testimonies yet</h3>
+            <p style="color: var(--text-muted);">Be the first to share your story and inspire others!</p>
+          </div>
+        </div>
+      {% endif %}
+    {% endwith %}
+  </div>
+</div>
+
+<!-- =============== MODALS =============== -->
+
+<!-- Volunteer Modal -->
+<div class="modal fade" id="volunteerModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Volunteer Application</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <form action="{{ url_for('submit_volunteer') }}" method="POST">
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label">Full Name *</label><input type="text" name="name" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Phone Number *</label><input type="tel" name="phone" class="form-control" required></div>
+            <div class="col-12"><label class="form-label">Email Address</label><input type="email" name="email" class="form-control"></div>
+            <div class="col-12"><label class="form-label">Areas of Interest *</label>
+              <div class="row g-2 mt-1">
+                <div class="col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" name="areas" value="Worship Team" id="worship"><label class="form-check-label" for="worship">Worship Team</label></div></div>
+                <div class="col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" name="areas" value="Youth Ministry" id="youth"><label class="form-check-label" for="youth">Youth Ministry</label></div></div>
+                <div class="col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" name="areas" value="Media Team" id="media"><label class="form-check-label" for="media">Media Team</label></div></div>
+                <div class="col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" name="areas" value="Ushering" id="usher"><label class="form-check-label" for="usher">Ushering</label></div></div>
+                <div class="col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" name="areas" value="Children Ministry" id="children"><label class="form-check-label" for="children">Children Ministry</label></div></div>
+              </div>
+            </div>
+            <div class="col-12"><label class="form-label">Tell Us About Yourself</label><textarea name="message" rows="4" class="form-control"></textarea></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Application</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Donate Modal -->
+<div class="modal fade" id="donateModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">Support Our Ministry</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-center mb-4">Your generous giving helps us reach more souls. Choose your preferred method:</p>
+        <div class="d-grid gap-3">
+          <a href="https://paypal.com/..." target="_blank" class="payment-btn btn-paypal"><i class="bi bi-paypal"></i> PayPal / Card</a>
+          <button class="payment-btn btn-mpesa" onclick="alert('M-Pesa Paybill: 123456\nAccount: HARVEST')">M-Pesa (Kenya)</button>
+          <button class="payment-btn btn-bank" onclick="alert('Bank: KCB\nAccount: 1234567890\nName: Lord\'s Harvest Ministry')">Bank Transfer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Minister Modal -->
+<div class="modal fade" id="ministerModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Teaching Ministry Application</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <form action="{{ url_for('submit_minister') }}" method="POST">
+        <div class="modal-body">
+          <div class="mb-3"><label class="form-label">Full Name *</label><input type="text" name="name" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">Email *</label><input type="email" name="email" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">Interest *</label><select name="interest" class="form-select" required><option value="">Select...</option><option>Sunday School</option><option>Bible Study</option><option>Youth Mentor</option></select></div>
+          <div class="mb-3"><label class="form-label">Experience</label><textarea name="experience" rows="4" class="form-control"></textarea></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Testimony Modal -->
+<div class="modal fade" id="testimonyModal" tabindex="-1" style="background: url('{{ url_for('static', filename='images/hero.jpg') }}') center/cover no-repeat;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="background: var(--ministry-gold); color: white;">
+        <h5 class="modal-title">Share Your Testimony</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <form action="{{ url_for('submit_testimony') }}" method="POST">
+        <div class="modal-body">
+          <div class="mb-3"><label class="form-label">Your Name *</label><input type="text" name="name" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">Role (Optional)</label><input type="text" name="role" class="form-control"></div>
+          <div class="mb-3"><label class="form-label">Your Testimony *</label><textarea name="message" rows="5" class="form-control" required></textarea></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn" style="background: var(--ministry-gold); color: white; font-weight: 700;">Share Testimony</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- NEW: PARTNERSHIP MODAL -->
+<div class="modal fade" id="partnershipModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header text-white" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6);">
+        <h5 class="modal-title">Become a Ministry Partner</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <form action="{{ url_for('submit_partnership') }}" method="POST">
+        <div class="modal-body">
+          <p class="lead text-center mb-4">Let’s advance the Kingdom together!</p>
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label">Organization / Church Name *</label><input type="text" name="org_name" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Contact Person *</label><input type="text" name="contact_person" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Email *</label><input type="email" name="email" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Phone *</label><input type="tel" name="phone" class="form-control" required></div>
+            <div class="col-12">
+              <label class="form-label">Partnership Interests *</label>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="form-check"><input class="form-check-input" type="checkbox" name="interests" value="Joint Crusades" id="c1"><label class="form-check-label" for="c1">Joint Crusades & Events</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" name="interests" value="Mission Trips" id="c2"><label class="form-check-label" for="c2">Mission Trips</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" name="interests" value="Prayer Partnership" id="c3"><label class="form-check-label" for="c3">Prayer Partnership</label></div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-check"><input class="form-check-input" type="checkbox" name="interests" value="Resource Sharing" id="c4"><label class="form-check-label" for="c4">Resource Sharing</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" name="interests" value="Financial Support" id="c5"><label class="form-check-label" for="c5">Financial Support</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" name="interests" value="Church Planting" id="c6"><label class="form-check-label" for="c6">Church Planting</label></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12"><label class="form-label">Your Vision for Partnership</label><textarea name="vision" rows="5" class="form-control" placeholder="How would you like to partner with us?"></textarea></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-lg px-5">Submit Request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

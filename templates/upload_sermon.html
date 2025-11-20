@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Admin — Upload Sermon{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 0; max-width:850px;">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div style="margin-bottom:18px;">
+        {% for category, msg in messages %}
+          <div class="alert alert-{{ category }}" style="padding:10px;border-radius:6px;margin-bottom:6px;">
+            {{ msg }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% if login_only %}
+    <h2>Admin Login</h2>
+    <form method="post" action="{{ url_for('admin_login') }}" style="max-width:420px;">
+      <label>Password</label>
+      <input type="password" name="password" class="input" style="width:100%;padding:10px;margin:8px 0;border-radius:6px;border:1px solid #ddd;">
+      <button class="btn btn-primary" type="submit">Login</button>
+    </form>
+  {% else %}
+    <h2>Upload New Sermon / Media</h2>
+    <form method="post" action="{{ url_for('upload_sermon') }}" enctype="multipart/form-data">
+      <label>Title</label>
+      <input name="title" required class="input" style="width:100%;padding:10px;margin:8px 0;border-radius:6px;border:1px solid #ddd;">
+
+      <label>Description (optional)</label>
+      <textarea name="description" rows="3" class="input" style="width:100%;padding:10px;margin:8px 0;border-radius:6px;border:1px solid #ddd;"></textarea>
+
+      <label>Category</label>
+      <select name="category" required style="width:260px;padding:8px;border-radius:6px;border:1px solid #ddd;margin:8px 0;">
+        <option value="pdf">PDF (Sermon notes)</option>
+        <option value="audio">Audio (MP3, WAV)</option>
+        <option value="video">Video (MP4)</option>
+        <option value="images">Images (cover or promo)</option>
+      </select>
+
+      <label>File</label>
+      <input type="file" name="file" required style="display:block;margin:8px 0;">
+
+      <div style="margin-top:12px;">
+        <button class="btn btn-primary" type="submit">Upload</button>
+        <a href="{{ url_for('sermons') }}" class="btn btn-outline" style="margin-left:8px;">View Sermons</a>
+      </div>
+    </form>
+  {% endif %}
+</div>
+{% endblock %}

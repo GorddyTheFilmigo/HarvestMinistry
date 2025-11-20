@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login - The Lords Harvest Ministry{% endblock %}
+
+{% block content %}
+<style>
+  .login-container {
+    max-width: 450px;
+    margin: 80px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  
+  .login-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .login-header h2 {
+    color: #1e3a8a;
+    margin-bottom: 8px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  
+  .form-group input:focus {
+    outline: none;
+    border-color: #1e3a8a;
+  }
+  
+  .login-btn {
+    width: 100%;
+    padding: 14px;
+    background: #1e3a8a;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  
+  .login-btn:hover {
+    background: #233da2;
+  }
+  
+  .back-link {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .back-link a {
+    color: #1e3a8a;
+    text-decoration: none;
+  }
+  
+  .back-link a:hover {
+    text-decoration: underline;
+  }
+  
+  .flash-messages {
+    margin-bottom: 20px;
+  }
+  
+  .flash {
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+  }
+  
+  .flash.success {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #6ee7b7;
+  }
+  
+  .flash.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+  }
+  
+  .flash.warning {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+  }
+</style>
+
+<div class="login-container">
+  <div class="login-header">
+    <h2>🔐 Admin Login</h2>
+    <p style="color: #666;">Enter your credentials to access the admin panel</p>
+  </div>
+  
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% endwith %}
+  
+  <form method="POST" action="{{ url_for('admin_login') }}">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required autofocus>
+    </div>
+    
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+    
+    <button type="submit" class="login-btn">Login</button>
+  </form>
+  
+  <div class="back-link">
+    <a href="{{ url_for('home') }}">← Back to Home</a>
+  </div>
+</div>
+{% endblock %}

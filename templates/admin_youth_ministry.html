@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Admin - Youth Ministry{% endblock %}
+{% block content %}
+<div class="container" style="padding: 40px 20px; max-width: 1000px;">
+  <h1 style="color: #5D3FD3; margin-bottom: 30px;">Youth Ministry Management</h1>
+
+  <!-- Add Leader -->
+  <div style="background: #f0f0ff; padding: 20px; border-radius: 12px; margin-bottom: 40px;">
+    <h3>Add New Leader</h3>
+    <form method="POST" action="{{ url_for('add_youth_leader') }}" enctype="multipart/form-data">
+      <input type="text" name="name" placeholder="Full Name" required style="width: 100%; padding: 10px; margin: 10px 0;">
+      <input type="text" name="role" placeholder="Role (e.g. Youth Pastor)" required style="width: 100%; padding: 10px; margin: 10px 0;">
+      <input type="file" name="photo" accept="image/*" style="margin: 10px 0;">
+      <button type="submit" style="background: #5D3FD3; color: white; padding: 12px 24px; border: none; border-radius: 8px;">Add Leader</button>
+    </form>
+  </div>
+
+  <!-- Current Leaders -->
+  <h3>Current Leaders</h3>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 50px;">
+    {% for leader in leaders %}
+    <div style="background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center;">
+      <img src="{{ leader.photo }}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+      <h4>{{ leader.name }}</h4>
+      <p>{{ leader.role }}</p>
+      <a href="{{ url_for('delete_youth_leader', index=loop.index0) }}" 
+         style="color: red; font-size: 0.9rem;" 
+         onclick="return confirm('Delete {{ leader.name }}?')">Delete</a>
+    </div>
+    {% else %}
+    <p>No leaders added yet.</p>
+    {% endfor %}
+  </div>
+
+  <!-- Add Event -->
+  <div style="background: #fff0f0; padding: 20px; border-radius: 12px; margin-bottom: 40px;">
+    <h3>Add Youth Event</h3>
+    <form method="POST" action="{{ url_for('add_youth_event') }}">
+      <input type="text" name="title" placeholder="Event Title" required style="width: 100%; padding: 10px; margin: 10px 0;">
+      <input type="date" name="date" required style="padding: 10px; margin: 10px 0;">
+      <input type="text" name="time" placeholder="e.g. 7:00 PM" style="width: 100%; padding: 10px; margin: 10px 0;">
+      <textarea name="description" placeholder="Description (optional)" style="width: 100%; height: 80px; padding: 10px;"></textarea>
+      <button type="submit" style="background: #FF6B6B; color: white; padding: 12px 24px; border: none; border-radius: 8px;">Add Event</button>
+    </form>
+  </div>
+
+  <!-- Current Events -->
+  <h3>Upcoming Youth Events</h3>
+  {% for event in events %}
+  <div style="background: white; padding: 15px; border-left: 5px solid #FF6B6B; margin-bottom: 15px; border-radius: 8px;">
+    <h4>{{ event.title }}</h4>
+    <p><strong>{{ event.date }} • {{ event.time }}</strong></p>
+    {% if event.description %}<p>{{ event.description }}</p>{% endif %}
+    <a href="{{ url_for('delete_youth_event', index=loop.index0) }}" 
+       style="color: red; font-size: 0.9rem;" 
+       onclick="return confirm('Delete this event?')">Delete</a>
+  </div>
+  {% else %}
+  <p>No events scheduled yet.</p>
+  {% endfor %}
+
+  <p><a href="{{ url_for('evangelism') }}">← Back to Main Admin</a></p>
+</div>
+{% endblock %}

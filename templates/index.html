@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}The Lord's Harvest Ministry{% endblock %}
+
+{% block content %}
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>The Lords Harvest Ministry — Passion for the lost (Acts 13:47)</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script defer src="{{ url_for('static', filename='js/main.js') }}"></script>
+  
+  <!-- Hero -->
+  <section class="hero" style="background: url('{{ url_for('static', filename='images/hero.jpg') }}') center/cover no-repeat;">
+    <div class="hero-overlay"></div>
+    <div class="container hero-inner">
+      <h1>The Lords Harvest Ministry</h1>
+      <p class="hero-sub">"For I have set you to be a light for the Gentiles, that you may bring salvation to the ends of the earth." <span class="verse">Acts 13:47</span></p>
+      <div class="hero-cta">
+        <a href="{{ url_for('join_our_mission') }}" class="btn btn-primary">Join Our Mission</a>
+        <a href="{{ url_for('learn_more') }}"
+        style="background-color: gold; padding: 8px 15px; border-radius: 6px; color: black; font-weight: 600; text-decoration: none;"
+          class="{% if '/learn-more' in request.path %}active{% endif %}">
+           Learn More</a>
+</div>
+    </div>
+  </section>
+  
+  <!-- Mission -->
+  <section id="mission" class="mission container">
+    <h2 class="section-title">Our Mission</h2>
+    <p class="lead">Passionate about reaching the lost and bringing the light of Christ to every corner of the world.</p>
+    <div class="cards">
+      <article class="card">
+        <div class="card-icon">❤</div>
+        <h3>Compassionate Outreach</h3>
+        <p>Sharing God's love through acts of service and outreach in our community and beyond.</p>
+      </article>
+      <article class="card">
+        <div class="card-icon">🤝</div>
+        <h3>Community Building</h3>
+        <p>Creating meaningful connections and fostering spiritual growth among believers.</p>
+      </article>
+      <article class="card">
+        <div class="card-icon">📖</div>
+        <h3>Biblical Teaching</h3>
+        <p>Grounding our ministry in the Word of God through faithful teaching and discipleship.</p>
+      </article>
+    </div>
+  </section>
+  
+  <!-- Callout band -->
+  <section class="callout">
+    <div class="container">
+      <h3>Join Us in Making a Difference</h3>
+      <p>Together we can reach more souls and bring hope to those who need it most.</p>
+      <a class="btn btn-accent" href="{{ url_for('join_our_mission') }}">Get Involved Today</a>
+    </div>
+  </section>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+{% endblock %}

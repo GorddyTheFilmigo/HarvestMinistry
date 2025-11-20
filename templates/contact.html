@@ -1,0 +1,444 @@
+{% extends "base.html" %}
+{% block title %}Contact Us - The Lord's Harvest Ministry{% endblock %}
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+<style>
+  :root {
+    --ministry-primary: #1e3a8a;
+    --ministry-secondary: #3b82f6;
+    --ministry-gold: #f59e0b;
+    --ministry-light: #eff6ff;
+    --text-dark: #1f2937;
+    --text-muted: #6b7280;
+    --facebook: #1877f2;
+    --instagram: #e4405f;
+    --tiktok: #000000;
+    --whatsapp: #25d366;
+    --email: #ea4335;
+  }
+
+  /* Hero Section */
+  .contact-hero {
+    background: linear-gradient(135deg, var(--ministry-primary) 0%, var(--ministry-secondary) 100%);
+    color: white;
+    padding: 100px 20px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="80" height="80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+    opacity: 0.5;
+  }
+
+  .contact-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .contact-hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .contact-hero .subtitle {
+    font-size: 1.5rem;
+    opacity: 0.95;
+    margin-bottom: 0;
+  }
+
+  /* Content Section */
+  .contact-content {
+    padding: 80px 20px;
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--ministry-primary);
+    margin-bottom: 20px;
+  }
+
+  .section-subtitle {
+    text-align: center;
+    font-size: 1.125rem;
+    color: var(--text-muted);
+    max-width: 700px;
+    margin: 0 auto 60px;
+  }
+
+  /* Social Media Grid */
+  .social-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto 60px;
+  }
+
+  .social-card {
+    background: white;
+    border-radius: 16px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .social-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--card-color), var(--card-color-light));
+  }
+
+  .social-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .social-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    font-size: 2.5rem;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+  }
+
+  .social-card:hover .social-icon {
+    transform: scale(1.1);
+  }
+
+  /* Facebook */
+  .social-card.facebook {
+    --card-color: var(--facebook);
+    --card-color-light: #4a9ff5;
+  }
+  .social-card.facebook .social-icon {
+    background: linear-gradient(135deg, var(--facebook), #4a9ff5);
+  }
+
+  /* Instagram */
+  .social-card.instagram {
+    --card-color: var(--instagram);
+    --card-color-light: #f77737;
+  }
+  .social-card.instagram .social-icon {
+    background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af, #515bd4);
+  }
+
+  /* TikTok */
+  .social-card.tiktok {
+    --card-color: var(--tiktok);
+    --card-color-light: #333333;
+  }
+  .social-card.tiktok .social-icon {
+    background: linear-gradient(135deg, #000000, #ff0050, #00f2ea);
+  }
+
+  /* WhatsApp */
+  .social-card.whatsapp {
+    --card-color: var(--whatsapp);
+    --card-color-light: #34e677;
+  }
+  .social-card.whatsapp .social-icon {
+    background: linear-gradient(135deg, var(--whatsapp), #34e677);
+  }
+
+  /* Email */
+  .social-card.email {
+    --card-color: var(--email);
+    --card-color-light: #f25c54;
+  }
+  .social-card.email .social-icon {
+    background: linear-gradient(135deg, var(--email), #f25c54);
+  }
+
+  .social-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+  }
+
+  .social-handle {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-bottom: 25px;
+    font-family: monospace;
+  }
+
+  .social-link {
+    display: inline-block;
+    padding: 12px 32px;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .social-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    color: white;
+  }
+
+  .social-card.facebook .social-link {
+    background: var(--facebook);
+  }
+
+  .social-card.instagram .social-link {
+    background: linear-gradient(135deg, #f58529, #dd2a7b);
+  }
+
+  .social-card.tiktok .social-link {
+    background: var(--tiktok);
+  }
+
+  .social-card.whatsapp .social-link {
+    background: var(--whatsapp);
+  }
+
+  .social-card.email .social-link {
+    background: var(--email);
+  }
+
+  /* CTA Section */
+  .cta-section {
+    background: linear-gradient(135deg, var(--ministry-light) 0%, #dbeafe 100%);
+    padding: 60px 30px;
+    border-radius: 16px;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .cta-section h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--ministry-primary);
+    margin-bottom: 15px;
+  }
+
+  .cta-section p {
+    font-size: 1.125rem;
+    color: var(--text-muted);
+    margin-bottom: 30px;
+  }
+
+  .cta-button {
+    display: inline-block;
+    padding: 16px 40px;
+    background: var(--ministry-primary);
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.125rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+  }
+
+  .cta-button:hover {
+    background: #15295c;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(30, 58, 138, 0.4);
+    color: white;
+  }
+
+  /* Stats Section */
+  .stats-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 60px auto;
+    text-align: center;
+  }
+
+  .stat-item {
+    padding: 30px;
+  }
+
+  .stat-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--ministry-gold);
+    margin-bottom: 10px;
+  }
+
+  .stat-label {
+    font-size: 1rem;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .contact-hero {
+      padding: 60px 20px 50px;
+    }
+
+    .contact-hero h1 {
+      font-size: 2.25rem;
+    }
+
+    .contact-hero .subtitle {
+      font-size: 1.125rem;
+    }
+
+    .contact-content {
+      padding: 50px 20px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+    }
+
+    .social-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .cta-section {
+      padding: 40px 20px;
+    }
+
+    .cta-section h3 {
+      font-size: 1.75rem;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+    }
+  }
+</style>
+<!-- Hero Section -->
+<section class="contact-hero" style="background: url('{{ url_for('static', filename='images/hero.jpg') }}') center/cover no-repeat;">
+  <div class="contact-hero-content">
+    <h1>📱 Connect With Us</h1>
+    <p class="subtitle">
+      Stay connected and be part of our growing community across all platforms
+    </p>
+  </div>
+</section>
+
+<!-- Main Content -->
+<section class="contact-content">
+  <div class="container">
+  	<h3>Need More Information?</h3>
+      <p>
+        Have questions or want to learn more about our ministry? We're here to help and would love to hear from you.You can contact us through these our social media platforms.
+      </p>
+    
+    <h2 class="section-title">Follow Us on Social Media</h2>
+    <p class="section-subtitle">
+      Join our online community and stay updated with the latest sermons, events, and ministry updates
+    </p>
+
+    <!-- Social Media Grid -->
+    <div class="social-grid">
+      
+      <!-- Facebook -->
+      <div class="social-card facebook">
+        <div class="social-icon">
+          <i class="bi bi-facebook"></i>
+        </div>
+        <h3 class="social-title">Facebook</h3>
+        <p class="social-handle">@LordsHarvestMinistry</p>
+        <a href="https://facebook.com/your-page" target="_blank" class="social-link">
+          Follow Us
+        </a>
+      </div>
+
+      <!-- Instagram -->
+      <div class="social-card instagram">
+        <div class="social-icon">
+          <i class="bi bi-instagram"></i>
+        </div>
+        <h3 class="social-title">Instagram</h3>
+        <p class="social-handle">@lordsharvestministry</p>
+        <a href="https://instagram.com/your-handle" target="_blank" class="social-link">
+          Follow Us
+        </a>
+      </div>
+
+      <!-- TikTok -->
+      <div class="social-card tiktok">
+        <div class="social-icon">
+          <i class="bi bi-tiktok"></i>
+        </div>
+        <h3 class="social-title">TikTok</h3>
+        <p class="social-handle">@lordsharvestmin</p>
+        <a href="https://tiktok.com/@your-handle" target="_blank" class="social-link">
+          Follow Us
+        </a>
+      </div>
+
+      <!-- WhatsApp -->
+      <div class="social-card whatsapp">
+        <div class="social-icon">
+          <i class="bi bi-whatsapp"></i>
+        </div>
+        <h3 class="social-title">WhatsApp</h3>
+        <p class="social-handle">+254 712 345 678</p>
+        <a href="https://wa.me/254712345678?text=Hello%20Lords%20Harvest%20Ministry" target="_blank" class="social-link">
+          Message Us
+        </a>
+      </div>
+
+      <!-- Email -->
+      <div class="social-card email">
+        <div class="social-icon">
+          <i class="bi bi-envelope-fill"></i>
+        </div>
+        <h3 class="social-title">Email</h3>
+        <p class="social-handle">info@lordsharvest.org</p>
+        <a href="mailto:info@lordsharvest.org" class="social-link">
+          Email Us
+        </a>
+      </div>
+
+    </div>
+
+
+    <!-- CTA Section -->
+    <div class="cta-section">
+      <a href="{{ url_for('contact') }}" class="cta-button">
+        Contact Us
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

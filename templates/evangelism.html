@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+{% block title %}Sermons - The Lords Harvest Ministry{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script defer src="{{ url_for('static', filename='js/main.js') }}"></script>
+<style>
+  .upload-section {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 10px;
+    margin: 30px 0;
+  }
+  .upload-form { max-width: 600px; margin: 0 auto; }
+  .form-group { margin-bottom: 20px; }
+  .form-group label { font-weight: 600; margin-bottom: 8px; display: block; }
+  .upload-btn {
+    background: #1e3a8a;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 16px;
+  }
+  .resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+  }
+  .resource-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .resource-icon { font-size: 40px; }
+  .resource-actions { display: flex; gap: 10px; margin-top: 12px; }
+  .btn-view {
+    flex: 1;
+    background: #2563eb;
+    color: white;
+    padding: 8px;
+    border-radius: 6px;
+    text-align: center;
+  }
+  .btn-download {
+    flex: 1;
+    background: #16a34a;
+    color: white;
+    padding: 8px;
+    border-radius: 6px;
+    text-align: center;
+  }
+  .btn-delete {
+    background: #ef4444;
+    color: white;
+    padding: 8px;
+    border-radius: 6px;
+  }
+  audio, video { width: 100%; border-radius: 6px; margin-top: 8px; }
+  .resource-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 10px;
+  }
+</style>
+
+<a href="{{ url_for('stream_control') }}" class="live-stream-btn">
+    <span class="live-dot"></span>
+    Live Stream
+</a>
+
+<!-- Banner -->
+<section class="page-banner" style="
+  background:url('{{ url_for('static', filename='images/hero.jpg') }}') center/cover no-repeat;
+  padding:80px 0;color:white;text-align:center;position:relative;">
+  <div class="banner-overlay" style="position:absolute;inset:0;background:rgba(4,14,34,0.7);"></div>
+  <div class="container" style="position:relative;">
+    <h1>Evangelism Resources</h1>
+    <p>Equipping believers to share the Gospel effectively</p>
+  </div>
+</section>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="flash-messages">
+    {% for category, message in messages %}
+      <div class="flash {{ category }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endwith %}
+
+<!-- YOUTH MINISTRY ADMIN QUICK LINK (NEWLY ADDED) -->
+<div class="container" style="margin: 40px 0; text-align: center;">
+  <div style="
+    background: linear-gradient(135deg, #5D3FD3, #9F7AEA);
+    color: white;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0 12px 35px rgba(93, 63, 211, 0.35);
+    display: inline-block;
+    width: 90%;
+    max-width: 900px;
+  ">
+    <h3 style="margin: 0 0 12px 0; font-size: 1.8rem;">
+      Manage Children & Youth Ministry
+    </h3>
+    <p style="margin: 0 0 25px 0; font-size: 1.1rem; opacity: 0.95;">
+      Add leaders • Upload photos • Schedule weekly youth events
+    </p>
+    <a href="{{ url_for('admin_youth_ministry') }}" style="
+  background: white;
+  color: #5D3FD3;
+  font-weight: bold;
+  padding: 16px 48px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-size: 1.3rem;
+  display: inline-block;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+  transition: all 0.3s ease;
+  text-align: center;
+" 
+onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 15px 35px rgba(0,0,0,0.35)'"
+onmouseout="this.style.transform=''; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.25)'">
+  Open Youth Ministry Admin Panel
+</a>
+
+  </div>
+</div>
+
+<!-- Upload Section -->
+<section class="container" style="padding:50px 0;">
+  <div class="upload-section">
+    <h2 style="text-align:center;margin-bottom:10px;">Upload Resources</h2>
+    <p style="text-align:center;color:#666;margin-bottom:30px;">
+      Share any ministry materials — documents, audio, videos, or images.
+    </p>
+    <form action="{{ url_for('upload_resources') }}" method="post" enctype="multipart/form-data" class="upload-form">
+      <div class="form-group">
+        <label for="file_type">Resource Type:</label>
+        <select name="file_type" id="file_type" required>
+          <option value="">-- Select Type --</option>
+          <option value="documents">Documents (PDF, DOCX, PPTX, etc.)</option>
+          <option value="audio">Audio (MP3, WAV, etc.)</option>
+          <option value="video">Video (MP4, etc.)</option>
+          <option value="images">Images (JPG, PNG, etc.)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Select Files:</label>
+        <input type="file" name="files" multiple required>
+      </div>
+      <button type="submit" class="upload-btn">Upload Resources</button>
+    </form>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- DOCUMENT SECTION -->
+  <div class="resource-type-header">
+    <span style="font-size:32px;">Documents</span>
+    <h3>Documents</h3>
+    <span style="color:#6b7280;">({{ files.documents|length }} files)</span>
+  </div>
+  {% if files.documents %}
+  <div class="resources-grid">
+    {% for file in files.documents %}
+    <div class="resource-card">
+      <span class="resource-icon">Document</span>
+      <h4>{{ file }}</h4>
+      <div class="resource-actions">
+        <a href="{{ url_for('serve_document', filename=file) }}" target="_blank" class="btn-view">View</a>
+        <a href="{{ url_for('serve_document', filename=file) }}" download class="btn-download">Download</a>
+        <a href="{{ url_for('delete_file', file_type='documents', filename=file) }}"
+           onclick="return confirm('Delete this file?')"
+           class="btn-delete">Delete</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">No documents uploaded yet</div>
+  {% endif %}
+
+  <div class="section-divider"></div>
+
+  <!-- Audio -->
+  <div class="resource-type-header">
+    <span style="font-size:32px;">Audio</span>
+    <h3>Audio</h3>
+    <span>({{ files.audio|length }})</span>
+  </div>
+  {% if files.audio %}
+  <div class="resources-grid">
+    {% for file in files.audio %}
+    <div class="resource-card">
+      <span class="resource-icon">Audio</span>
+      <h4>{{ file }}</h4>
+      <audio controls>
+        <source src="{{ url_for('serve_audio', filename=file) }}">
+      </audio>
+      <div class="resource-actions">
+        <a href="{{ url_for('serve_audio', filename=file) }}" class="btn-view" target="_blank">Listen</a>
+        <a href="{{ url_for('serve_audio', filename=file) }}" download class="btn-download">Download</a>
+        <a href="{{ url_for('delete_file', file_type='audio', filename=file) }}" class="btn-delete">Delete</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">No audio files uploaded yet</div>
+  {% endif %}
+
+  <div class="section-divider"></div>
+
+  <!-- Video -->
+  <div class="resource-type-header">
+    <span style="font-size:32px;">Video</span>
+    <h3>Videos</h3>
+    <span>({{ files.video|length }})</span>
+  </div>
+  {% if files.video %}
+  <div class="resources-grid">
+    {% for file in files.video %}
+    <div class="resource-card">
+      <span class="resource-icon">Video</span>
+      <h4>{{ file }}</h4>
+      <video controls>
+        <source src="{{ url_for('serve_video', filename=file) }}">
+      </video>
+      <div class="resource-actions">
+        <a href="{{ url_for('serve_video', filename=file) }}" target="_blank" class="btn-view">View</a>
+        <a href="{{ url_for('serve_video', filename=file) }}" download class="btn-download">Download</a>
+        <a href="{{ url_for('delete_file', file_type='video', filename=file) }}" class="btn-delete">Delete</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">No videos uploaded yet</div>
+  {% endif %}
+
+  <div class="section-divider"></div>
+
+  <!-- Images -->
+  <div class="resource-type-header">
+    <span style="font-size:32px;">Images</span>
+    <h3>Images</h3>
+    <span>({{ files.images|length }})</span>
+  </div>
+  {% if files.images %}
+  <div class="resources-grid">
+    {% for file in files.images %}
+    <div class="resource-card">
+      <img src="{{ url_for('serve_image', filename=file) }}">
+      <h4>{{ file }}</h4>
+      <div class="resource-actions">
+        <a href="{{ url_for('serve_image', filename=file) }}" class="btn-view" target="_blank">View</a>
+        <a href="{{ url_for('serve_image', filename=file) }}" download class="btn-download">Download</a>
+        <a href="{{ url_for('delete_file', file_type='images', filename=file) }}" class="btn-delete">Delete</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">No images uploaded yet</div>
+  {% endif %}
+</section>
+{% endblock %}
