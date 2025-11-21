@@ -505,10 +505,6 @@ def file_too_large(e):
     flash("File too large", "error")
     return redirect(url_for("evangelism"))
 
-@app.errorhandler(500)
-def internal_error(e):
-    return f"<h1>500</h1><p>{e}</p>", 500
-
 if __name__ == "__main__":
     print("Lord's Harvest Ministry Website is LIVE!")
     app.run(debug=True)
