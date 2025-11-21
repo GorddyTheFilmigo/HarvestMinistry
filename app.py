@@ -304,18 +304,22 @@ Glory to God!
 
 @app.route("/submit-partnership", methods=["POST"])
 def submit_partnership():
-    org_name = request.form.get("org_name")
-    contact_person = request.form.get("contact_person")
-    email = request.form.get("email")
-    phone = request.form.get("phone")
-    interests = request.form.getlist("interests")
-    vision = request.form.get("vision", "")
+    try:
+        org_name = request.form.get("org_name", "").strip()
+        contact_person = request.form.get("contact_person", "").strip()
+        email = request.form.get("email", "").strip()
+        phone = request.form.get("phone", "").strip()
+        interests = request.form.getlist("interests")  # Always safe → returns []
+        vision = request.form.get("vision", "").strip()
 
-    if org_name and contact_person and email:
+        if not org_name or not contact_person or not email:
+            flash("Please fill all required fields.", "error")
+            return redirect(url_for("join_our_mission"))
+
         interests_text = ", ".join(interests) if interests else "None selected"
+
         body = f"""
 NEW PARTNERSHIP REQUEST!
-
 Organization/Church: {org_name}
 Contact Person: {contact_person}
 Email: {email}
@@ -323,15 +327,16 @@ Phone: {phone or "Not provided"}
 Interests: {interests_text}
 Vision/Message:
 {vision or "None provided"}
-
 They want to partner in the Gospel!
         """
         send_email("NEW PARTNERSHIP REQUEST", body)
-        flash(f"Thank you {contact_person}! Your partnership request has been received!", "success")
-    else:
-        flash("Please fill all required fields.", "error")
-    return redirect(url_for("join_our_mission"))
+        flash("Thank you! Your partnership request has been received. We will contact you soon!", "success")
 
+    except Exception as e:
+        print("PARTNERSHIP ERROR:", e)
+        flash("Something went wrong. Please try again.", "error")
+
+    return redirect(url_for("join_our_mission"))
 # ==================== LIVE STREAM & ADMIN ====================
 @app.route("/live-stream")
 def live_stream():
