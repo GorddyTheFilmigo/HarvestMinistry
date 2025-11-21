@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Evangelism Resources | The Lord's Harvest Ministry{% endblock %}
-
 {% block content %}
 <style>
   :root {
     --ministry-primary: #1e3a8a;
-    --ministry-secondary:: #3b82f6;
+    --ministry-secondary: #3b82f6;
     --ministry-gold: #f59e0b;
     --ministry-red: #dc2626;
     --ministry-purple: #7c3aed;
@@ -15,7 +14,6 @@
     --border-color: #e5e7eb;
     --bg-light: #f9fafb;
   }
-
   /* Hero Banner */
   .evangelism-hero {
     background: linear-gradient(135deg, var(--ministry-primary) 0%, #1e40af 100%),
@@ -50,7 +48,6 @@
     max-width: 700px;
     margin: 0 auto 30px;
   }
-
   /* Live Stream Button */
   .live-stream-btn {
     display: inline-flex;
@@ -81,7 +78,6 @@
     0%, 100% { box-shadow: 0 0 0 0 rgba(252, 165, 165, 0.7); }
     50% { box-shadow: 0 0 0 10px rgba(252, 165, 165, 0); }
   }
-
   /* Youth Admin Panel Card */
   .youth-admin-card {
     background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
@@ -118,7 +114,17 @@
     transform: translateY(-5px);
     box-shadow: 0 20px 40px rgba(0,0,0,0.35);
   }
-
+  /* Fellowship Card - Same Style */
+  .fellowship-admin-card {
+    background: linear-gradient(135deg, #581c87 0%, #7c3aed 100%);
+    color: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(124, 58, 237, 0.4);
+    margin: 40px auto;
+    max-width: 1000px;
+  }
   /* Upload Section */
   .upload-section {
     background: white;
@@ -172,7 +178,6 @@
     background: #1e40af;
     transform: translateY(-2px);
   }
-
   /* Section Headers */
   .section-header {
     display: flex;
@@ -200,7 +205,6 @@
     font-weight: 600;
     font-size: 0.9rem;
   }
-
   /* Resources Grid */
   .resources-grid {
     display: grid;
@@ -269,13 +273,11 @@
     border-radius: 10px;
   }
   .btn-delete:hover { background: #dc2626; }
-
   audio, video {
     width: 100%;
     border-radius: 10px;
     margin: 12px 0;
   }
-
   .empty-state {
     text-align: center;
     padding: 60px 20px;
@@ -285,7 +287,6 @@
     border-radius: 16px;
     border: 2px dashed var(--border-color);
   }
-
   @media (max-width: 768px) {
     .evangelism-hero h1 { font-size: 2.3rem; }
     .resources-grid { grid-template-columns: 1fr; }
@@ -293,7 +294,6 @@
     .section-count { margin: 10px auto 0; }
   }
 </style>
-
 <!-- Hero -->
 <section class="evangelism-hero">
   <div class="hero-content">
@@ -304,9 +304,7 @@
     </a>
   </div>
 </section>
-
 <div class="container" style="max-width: 1300px; margin: 0 auto; padding: 0 20px;">
-
   <!-- Youth Ministry Admin Panel -->
   <div class="youth-admin-card">
     <h3>Manage Children & Youth Ministry</h3>
@@ -315,6 +313,16 @@
       Open Youth Ministry Panel
     </a>
   </div>
+
+  <!-- NEW: Men's & Women's Fellowship Admin Panel -->
+  <div class="fellowship-admin-card">
+    <h3>Manage Men's & Women's Fellowship</h3>
+    <p>Update meeting times • Monthly themes • Leaders • Contact info • Vision</p>
+    <a href="{{ url_for('admin_fellowship') }}" class="youth-admin-btn" style="background: white; color: #581c87;">
+      Open Fellowship Panel
+    </a>
+  </div>
+  <!-- End of new card -->
 
   <!-- Upload Form -->
   <div class="upload-section">
@@ -338,7 +346,6 @@
       <button type="submit" class="upload-btn">Upload Resources</button>
     </form>
   </div>
-
   <!-- Documents -->
   <div class="section-header">
     <span>Documents</span>
@@ -365,7 +372,6 @@
   {% else %}
   <div class="empty-state">No documents uploaded yet</div>
   {% endif %}
-
   <!-- Audio -->
   <div class="section-header">
     <span>Audio</span>
@@ -393,7 +399,6 @@
   {% else %}
   <div class="empty-state">No audio messages uploaded yet</div>
   {% endif %}
-
   <!-- Video -->
   <div class="section-header">
     <span>Video</span>
@@ -421,7 +426,6 @@
   {% else %}
   <div class="empty-state">No videos uploaded yet</div>
   {% endif %}
-
   <!-- Images (Only for Youth Ministry - still visible in admin) -->
   <div class="section-header">
     <span>Images</span>
@@ -450,6 +454,5 @@
       <div class="empty-state">No images uploaded yet — these will appear in Children & Youth Ministry</div>
     {% endif %}
   </div>
-
 </div>
 {% endblock %}

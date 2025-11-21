@@ -484,6 +484,92 @@ def serve_document(filename):
     else:
         return send_from_directory(DOCUMENT_FOLDER, filename, as_attachment=True)
 
+@app.route("/fellowship")
+def fellowship():
+    data = load_fellowship_data()
+    return render_template("fellowship.html", fellowship=data)
+
+# ==================== MEN'S & WOMEN'S FELLOWSHIP ADMIN ====================
+FELLOWSHIP_DATA_FILE = os.path.join(BASE_DIR, "fellowship_data.json")
+
+def load_fellowship_data():
+    """Load fellowship data — return empty structure if file doesn't exist"""
+    if os.path.exists(FELLOWSHIP_DATA_FILE):
+        try:
+            with open(FELLOWSHIP_DATA_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except:
+            pass
+    # NO DEFAULT DATA — admin must create it
+    return {
+        "mens": {
+            "title": "",
+            "motto": "",
+            "meeting": "",
+            "venue": "",
+            "leader": "",
+            "phone": "",
+            "description": "",
+            "themes": []
+        },
+        "womens": {
+            "title": "",
+            "motto": "",
+            "meeting": "",
+            "venue": "",
+            "leader": "",
+            "phone": "",
+            "description": "",
+            "themes": []
+        }
+    }
+
+def save_fellowship_data(data):
+    """Save fellowship data"""
+    with open(FELLOWSHIP_DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+@app.route("/admin-fellowship")
+def admin_fellowship():
+    if not session.get('admin_logged_in'):
+        flash("Please login first", "error")
+        return redirect(url_for("admin_login"))
+    data = load_fellowship_data()
+    return render_template("admin_fellowship.html", fellowship=data)
+
+@app.route("/update-fellowship", methods=["POST"])
+def update_fellowship():
+    if not session.get('admin_logged_in'):
+        return redirect(url_for("admin_login"))
+    
+    data = load_fellowship_data()
+    
+    # Update from form — will overwrite empty fields
+    data["mens"] = {
+        "title": request.form.get("mens_title", "").strip(),
+        "motto": request.form.get("mens_motto", "").strip(),
+        "meeting": request.form.get("mens_meeting", "").strip(),
+        "venue": request.form.get("mens_venue", "").strip(),
+        "leader": request.form.get("mens_leader", "").strip(),
+        "phone": request.form.get("mens_phone", "").strip(),
+        "description": request.form.get("mens_description", "").strip(),
+        "themes": [t.strip() for t in request.form.get("mens_themes", "").split(",") if t.strip()]
+    }
+    
+    data["womens"] = {
+        "title": request.form.get("womens_title", "").strip(),
+        "motto": request.form.get("womens_motto", "").strip(),
+        "meeting": request.form.get("womens_meeting", "").strip(),
+        "venue": request.form.get("womens_venue", "").strip(),
+        "leader": request.form.get("womens_leader", "").strip(),
+        "phone": request.form.get("womens_phone", "").strip(),
+        "description": request.form.get("womens_description", "").strip(),
+        "themes": [t.strip() for t in request.form.get("womens_themes", "").split(",") if t.strip()]
+    }
+    
+    save_fellowship_data(data)
+    flash("Fellowship details saved successfully!", "success")
+    return redirect(url_for("admin_fellowship"))
+
 @app.route("/uploads/audio/<filename>")
 def serve_audio(filename):
     return send_from_directory(AUDIO_FOLDER, filename)

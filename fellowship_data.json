@@ -1,0 +1,26 @@
+{
+  "mens": {
+    "title": "No meeting",
+    "motto": "No motto",
+    "meeting": "No motto",
+    "venue": "No motto",
+    "leader": "No motto",
+    "phone": "No motto",
+    "description": "No motto",
+    "themes": [
+      "No motto"
+    ]
+  },
+  "womens": {
+    "title": "No motto",
+    "motto": "No motto",
+    "meeting": "No motto",
+    "venue": "No motto",
+    "leader": "No motto",
+    "phone": "No motto",
+    "description": "No motto",
+    "themes": [
+      "No motto"
+    ]
+  }
+}
