@@ -1,4 +1,10 @@
 {
-  "leaders": [],
+  "leaders": [
+    {
+      "name": "ODHIAMBO ONYANGO",
+      "role": "Pastor",
+      "photo": "/static/uploads/images/Screenshot 2025-11-20 103207.png"
+    }
+  ],
   "events": []
 }

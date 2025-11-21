@@ -113,7 +113,6 @@ def sermons():
         (DOCUMENT_FOLDER, "documents"),
         (AUDIO_FOLDER, "audio"),
         (VIDEO_FOLDER, "video"),
-        (IMAGE_FOLDER, "images")
     ]
     for folder_path, file_type in folders:
         if not os.path.exists(folder_path):
