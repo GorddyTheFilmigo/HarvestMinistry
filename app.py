@@ -79,7 +79,13 @@ def inject_testimonies():
 
 # ==================== UNIVERSAL EMAIL FUNCTION ====================
 def send_email(subject, body):
+    """Send email - disabled on production due to SMTP blocking"""
     try:
+        # Skip email on Render (check if we're in production)
+        if os.environ.get('RENDER'):
+            print(f"📧 Email skipped (SMTP blocked on Render): {subject}")
+            return False
+            
         msg = MIMEMultipart()
         msg['From'] = MINISTRY_EMAIL
         msg['To'] = MINISTRY_EMAIL
@@ -87,19 +93,15 @@ def send_email(subject, body):
         msg.attach(MIMEText(body, 'plain', 'utf-8'))
         
         # Set a timeout to prevent hanging
-        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT, timeout=10)
+        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT, timeout=5)
         server.starttls()
         server.login(MINISTRY_EMAIL, EMAIL_PASSWORD)
         server.sendmail(MINISTRY_EMAIL, MINISTRY_EMAIL, msg.as_string())
         server.quit()
         print(f"✅ Email sent successfully: {subject}")
         return True
-    except smtplib.SMTPException as e:
-        print(f"⚠️ SMTP ERROR (blocked by hosting): {e}")
-        return False
     except Exception as e:
-        print(f"❌ EMAIL FAILED: {e}")
-        traceback.print_exc()
+        print(f"⚠️ Email failed (non-critical): {e}")
         return False
 
 # ==================== PUBLIC ROUTES ====================
@@ -283,10 +285,8 @@ Message: {message or "None"}
 They are ready to serve!
         """
         
-        if send_email("NEW VOLUNTEER APPLICATION", body):
-            flash(f"Thank you {name}! Your volunteer application has been received.", "success")
-        else:
-            flash("Your application was received but email notification failed. We'll still process it!", "warning")
+        send_email("NEW VOLUNTEER APPLICATION", body)
+        flash(f"Thank you {name}! Your volunteer application has been received.", "success")
             
     except Exception as e:
         print(f"VOLUNTEER ERROR: {e}")
@@ -319,10 +319,8 @@ Experience:
 They want to teach and disciple!
         """
         
-        if send_email("NEW TEACHING MINISTRY APPLICATION", body):
-            flash(f"Thank you {name}! Your interest has been received.", "success")
-        else:
-            flash("Your application was received but email notification failed.", "warning")
+        send_email("NEW TEACHING MINISTRY APPLICATION", body)
+        flash(f"Thank you {name}! Your interest has been received.", "success")
             
     except Exception as e:
         print(f"MINISTER ERROR: {e}")
@@ -438,17 +436,11 @@ They want to partner in the Gospel!
         
         print("📧 Attempting to send email...")
         
-        # Try to send email but don't let it crash the app
-        try:
-            if send_email("NEW PARTNERSHIP REQUEST", body):
-                print("✅ Email sent successfully!")
-                flash("Thank you! Your partnership request has been received. We will contact you soon!", "success")
-            else:
-                print("⚠️ Email failed but form saved")
-                flash("Thank you! Your partnership request has been received. We will contact you soon!", "success")
-        except Exception as email_error:
-            print(f"⚠️ Email exception caught: {email_error}")
-            flash("Thank you! Your partnership request has been received. We will contact you soon!", "success")
+        # Try to send email (will skip on Render due to SMTP blocking)
+        send_email("NEW PARTNERSHIP REQUEST", body)
+        
+        # Always show success message since data is saved
+        flash("Thank you! Your partnership request has been received. We will contact you soon!", "success")
 
         print("✅ Partnership submission completed successfully")
         print("=" * 60)
