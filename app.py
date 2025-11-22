@@ -5,10 +5,11 @@ from datetime import datetime
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import traceback
 
 # ==================== EMAIL CONFIG ====================
 MINISTRY_EMAIL = "onyangoodhiambo49@gmail.com"
-EMAIL_PASSWORD = "getx qsmf zyxd ftxd"        # Your working App Password
+EMAIL_PASSWORD = "getx qsmf zyxd ftxd"
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 # =====================================================
@@ -89,8 +90,12 @@ def send_email(subject, body):
         server.login(MINISTRY_EMAIL, EMAIL_PASSWORD)
         server.sendmail(MINISTRY_EMAIL, MINISTRY_EMAIL, msg.as_string())
         server.quit()
+        print(f"✅ Email sent successfully: {subject}")
+        return True
     except Exception as e:
-        print(f"EMAIL FAILED: {e}")
+        print(f"❌ EMAIL FAILED: {e}")
+        traceback.print_exc()
+        return False
 
 # ==================== PUBLIC ROUTES ====================
 @app.route("/")
@@ -230,13 +235,17 @@ def children_youth():
 
 @app.route("/submit-volunteer", methods=["POST"])
 def submit_volunteer():
-    name = request.form.get("name")
-    phone = request.form.get("phone")
-    email = request.form.get("email")
-    areas = request.form.getlist("areas")
-    message = request.form.get("message", "")
+    try:
+        name = request.form.get("name", "").strip()
+        phone = request.form.get("phone", "").strip()
+        email = request.form.get("email", "").strip()
+        areas = request.form.getlist("areas")
+        message = request.form.get("message", "").strip()
 
-    if name and phone:
+        if not name or not phone:
+            flash("Please fill in your name and phone number.", "error")
+            return redirect(url_for("join_our_mission"))
+
         body = f"""
 NEW VOLUNTEER APPLICATION
 
@@ -248,20 +257,31 @@ Message: {message or "None"}
 
 They are ready to serve!
         """
-        send_email("NEW VOLUNTEER APPLICATION", body)
-        flash(f"Thank you {name}! Your volunteer application has been received.", "success")
-    else:
-        flash("Please fill in your name and phone number.", "error")
+        
+        if send_email("NEW VOLUNTEER APPLICATION", body):
+            flash(f"Thank you {name}! Your volunteer application has been received.", "success")
+        else:
+            flash("Your application was received but email notification failed. We'll still process it!", "warning")
+            
+    except Exception as e:
+        print(f"VOLUNTEER ERROR: {e}")
+        traceback.print_exc()
+        flash("Something went wrong. Please try again.", "error")
+    
     return redirect(url_for("join_our_mission"))
 
 @app.route("/submit-minister", methods=["POST"])
 def submit_minister():
-    name = request.form.get("name")
-    email = request.form.get("email")
-    interest = request.form.get("interest")
-    experience = request.form.get("experience", "")
+    try:
+        name = request.form.get("name", "").strip()
+        email = request.form.get("email", "").strip()
+        interest = request.form.get("interest", "").strip()
+        experience = request.form.get("experience", "").strip()
 
-    if name and email:
+        if not name or not email:
+            flash("Please provide your name and email.", "error")
+            return redirect(url_for("join_our_mission"))
+
         body = f"""
 NEW TEACHING MINISTRY APPLICATION
 
@@ -273,20 +293,32 @@ Experience:
 
 They want to teach and disciple!
         """
-        send_email("NEW TEACHING MINISTRY APPLICATION", body)
-        flash(f"Thank you {name}! Your interest has been received.", "success")
-    else:
-        flash("Please provide your name and email.", "error")
+        
+        if send_email("NEW TEACHING MINISTRY APPLICATION", body):
+            flash(f"Thank you {name}! Your interest has been received.", "success")
+        else:
+            flash("Your application was received but email notification failed.", "warning")
+            
+    except Exception as e:
+        print(f"MINISTER ERROR: {e}")
+        traceback.print_exc()
+        flash("Something went wrong. Please try again.", "error")
+    
     return redirect(url_for("join_our_mission"))
 
 @app.route("/submit-testimony", methods=["POST"])
 def submit_testimony():
-    name = request.form.get("name")
-    role = request.form.get("role")
-    message = request.form.get("message")
+    try:
+        name = request.form.get("name", "").strip()
+        role = request.form.get("role", "").strip()
+        message = request.form.get("message", "").strip()
 
-    if name and message:
+        if not name or not message:
+            flash("Please enter your name and testimony.", "error")
+            return redirect(url_for("join_our_mission") + "#testimoniesContainer")
+
         save_testimony({"name": name, "role": role, "message": message})
+        
         body = f"""
 NEW TESTIMONY RECEIVED!
 
@@ -296,47 +328,67 @@ Testimony:
 
 Glory to God!
         """
+        
         send_email("NEW TESTIMONY ON WEBSITE", body)
         flash("Your testimony has been shared!", "success")
-    else:
-        flash("Please enter your name and testimony.", "error")
+        
+    except Exception as e:
+        print(f"TESTIMONY ERROR: {e}")
+        traceback.print_exc()
+        flash("Something went wrong. Please try again.", "error")
+    
     return redirect(url_for("join_our_mission") + "#testimoniesContainer")
 
 @app.route("/submit-partnership", methods=["POST"])
 def submit_partnership():
     try:
+        # Get all form data with defaults
         org_name = request.form.get("org_name", "").strip()
         contact_person = request.form.get("contact_person", "").strip()
         email = request.form.get("email", "").strip()
         phone = request.form.get("phone", "").strip()
-        interests = request.form.getlist("interests")  # Always safe → returns []
         vision = request.form.get("vision", "").strip()
+        
+        # Safely get checkbox list - returns empty list if none selected
+        interests = request.form.getlist("interests")
 
+        # Validate required fields
         if not org_name or not contact_person or not email:
-            flash("Please fill all required fields.", "error")
+            flash("Please fill all required fields (Organization, Contact Person, and Email).", "error")
             return redirect(url_for("join_our_mission"))
 
+        # Build interests text
         interests_text = ", ".join(interests) if interests else "None selected"
 
+        # Build email body
         body = f"""
 NEW PARTNERSHIP REQUEST!
+
 Organization/Church: {org_name}
 Contact Person: {contact_person}
 Email: {email}
 Phone: {phone or "Not provided"}
 Interests: {interests_text}
+
 Vision/Message:
 {vision or "None provided"}
+
 They want to partner in the Gospel!
         """
-        send_email("NEW PARTNERSHIP REQUEST", body)
-        flash("Thank you! Your partnership request has been received. We will contact you soon!", "success")
+        
+        # Send email
+        if send_email("NEW PARTNERSHIP REQUEST", body):
+            flash("Thank you! Your partnership request has been received. We will contact you soon!", "success")
+        else:
+            flash("Your request was received but email notification failed. We'll still process it!", "warning")
 
     except Exception as e:
-        print("PARTNERSHIP ERROR:", e)
-        flash("Something went wrong. Please try again.", "error")
+        print(f"❌ PARTNERSHIP ERROR: {str(e)}")
+        traceback.print_exc()
+        flash("Something went wrong. Please try again or contact us directly.", "error")
 
     return redirect(url_for("join_our_mission"))
+
 # ==================== LIVE STREAM & ADMIN ====================
 @app.route("/live-stream")
 def live_stream():
@@ -493,14 +545,12 @@ def fellowship():
 FELLOWSHIP_DATA_FILE = os.path.join(BASE_DIR, "fellowship_data.json")
 
 def load_fellowship_data():
-    """Load fellowship data — return empty structure if file doesn't exist"""
     if os.path.exists(FELLOWSHIP_DATA_FILE):
         try:
             with open(FELLOWSHIP_DATA_FILE, "r", encoding="utf-8") as f:
                 return json.load(f)
         except:
             pass
-    # NO DEFAULT DATA — admin must create it
     return {
         "mens": {
             "title": "",
@@ -525,9 +575,9 @@ def load_fellowship_data():
     }
 
 def save_fellowship_data(data):
-    """Save fellowship data"""
     with open(FELLOWSHIP_DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
+
 @app.route("/admin-fellowship")
 def admin_fellowship():
     if not session.get('admin_logged_in'):
@@ -543,7 +593,6 @@ def update_fellowship():
     
     data = load_fellowship_data()
     
-    # Update from form — will overwrite empty fields
     data["mens"] = {
         "title": request.form.get("mens_title", "").strip(),
         "motto": request.form.get("mens_motto", "").strip(),
@@ -582,6 +631,18 @@ def serve_video(filename):
 def serve_image(filename):
     return send_from_directory(IMAGE_FOLDER, filename)
 
+# ==================== DEBUG ROUTE (REMOVE IN PRODUCTION) ====================
+@app.route("/test-email")
+def test_email():
+    try:
+        result = send_email("Test Email from Ministry Site", "This is a test email to verify SMTP is working correctly.")
+        if result:
+            return "✅ Email sent successfully! Check your inbox."
+        else:
+            return "❌ Email failed to send. Check console for errors."
+    except Exception as e:
+        return f"❌ Error: {str(e)}"
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
@@ -591,6 +652,14 @@ def file_too_large(e):
     flash("File too large", "error")
     return redirect(url_for("evangelism"))
 
+@app.errorhandler(500)
+def internal_error(e):
+    print(f"500 ERROR: {e}")
+    traceback.print_exc()
+    flash("An internal error occurred. Please try again.", "error")
+    return redirect(url_for("home"))
+
 if __name__ == "__main__":
-    print("Lord's Harvest Ministry Website is LIVE!")
+    print("🙏 Lord's Harvest Ministry Website is LIVE!")
+    print("📧 Email configured for:", MINISTRY_EMAIL)
     app.run(debug=True)

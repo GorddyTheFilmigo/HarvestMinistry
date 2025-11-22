@@ -175,7 +175,7 @@
     <!-- Volunteer -->
     <div class="col-md-6 col-lg-3">
       <div class="way-card" style="background: url('{{ url_for('static', filename='images/volunteer.JPG') }}') center/cover no-repeat;">
-        <div class="way-icon" style="background-color:white;">Praying Hands</div>
+        <div class="way-icon" style="background-color:white;">🙏</div>
         <h3 style="background-color:gold;">Volunteer</h3>
         <p>Use your talents and time to serve in various ministry departments.</p>
         <button class="btn btn-join" data-bs-toggle="modal" data-bs-target="#volunteerModal">Join as Volunteer</button>
@@ -184,7 +184,7 @@
     <!-- Give -->
     <div class="col-md-6 col-lg-3">
       <div class="way-card" style="background: url('{{ url_for('static', filename='images/give.JPG') }}') center/cover no-repeat;">
-        <div class="way-icon">Gift</div>
+        <div class="way-icon">🎁</div>
         <h3 style="background-color:gold;">Give</h3>
         <p>Support our ministry financially and help us reach more souls.</p>
         <button class="btn btn-join" data-bs-toggle="modal" data-bs-target="#donateModal">Donate Now</button>
@@ -193,16 +193,16 @@
     <!-- Teaching Ministry -->
     <div class="col-md-6 col-lg-3">
       <div class="way-card" style="background: url('{{ url_for('static', filename='images/teaching.JPG') }}') center/cover no-repeat;">
-        <div class="way-icon">Bible</div>
+        <div class="way-icon">📖</div>
         <h3 style="background-color:gold;">Teaching Ministry</h3>
         <p>Help disciple others through teaching and mentoring.</p>
         <button class="btn btn-join" data-bs-toggle="modal" data-bs-target="#ministerModal">Get Started</button>
       </div>
     </div>
-    <!-- PARTNERSHIP (NEW!) -->
+    <!-- PARTNERSHIP -->
     <div class="col-md-6 col-lg-3">
       <div class="way-card" style="background: url('{{ url_for('static', filename='images/patners.JPG') }}') center/cover no-repeat;">
-        <div class="way-icon">Hand Shake</div>
+        <div class="way-icon">🤝</div>
         <h3 style="background-color:gold;">Partner With Us</h3>
         <p>Churches, businesses, and organizations partnering together for greater Kingdom impact.</p>
         <button class="btn btn-join" data-bs-toggle="modal" data-bs-target="#partnershipModal">
@@ -242,7 +242,7 @@
       {% else %}
         <div class="col-12">
           <div class="empty-testimonies">
-            <div class="empty-testimonies-icon">Speech Bubble</div>
+            <div class="empty-testimonies-icon">💬</div>
             <h3 style="color: var(--text-muted);">No testimonies yet</h3>
             <p style="color: var(--text-muted);">Be the first to share your story and inspire others!</p>
           </div>
@@ -268,7 +268,7 @@
             <div class="col-md-6"><label class="form-label">Full Name *</label><input type="text" name="name" class="form-control" required></div>
             <div class="col-md-6"><label class="form-label">Phone Number *</label><input type="tel" name="phone" class="form-control" required></div>
             <div class="col-12"><label class="form-label">Email Address</label><input type="email" name="email" class="form-control"></div>
-            <div class="col-12"><label class="form-label">Areas of Interest *</label>
+            <div class="col-12"><label class="form-label">Areas of Interest</label>
               <div class="row g-2 mt-1">
                 <div class="col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" name="areas" value="Worship Team" id="worship"><label class="form-check-label" for="worship">Worship Team</label></div></div>
                 <div class="col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" name="areas" value="Youth Ministry" id="youth"><label class="form-check-label" for="youth">Youth Ministry</label></div></div>
@@ -301,8 +301,8 @@
         <p class="text-center mb-4">Your generous giving helps us reach more souls. Choose your preferred method:</p>
         <div class="d-grid gap-3">
           <a href="https://paypal.com/..." target="_blank" class="payment-btn btn-paypal"><i class="bi bi-paypal"></i> PayPal / Card</a>
-          <button class="payment-btn btn-mpesa" onclick="alert('M-Pesa Paybill: 123456\nAccount: HARVEST')">M-Pesa (Kenya)</button>
-          <button class="payment-btn btn-bank" onclick="alert('Bank: KCB\nAccount: 1234567890\nName: Lord\'s Harvest Ministry')">Bank Transfer</button>
+          <button class="payment-btn btn-mpesa" onclick="alert('M-Pesa Paybill: 123456\nAccount: HARVEST')">💚 M-Pesa (Kenya)</button>
+          <button class="payment-btn btn-bank" onclick="alert('Bank: KCB\nAccount: 1234567890\nName: Lord\'s Harvest Ministry')">🏦 Bank Transfer</button>
         </div>
       </div>
     </div>
@@ -334,7 +334,7 @@
 </div>
 
 <!-- Testimony Modal -->
-<div class="modal fade" id="testimonyModal" tabindex="-1" style="background: url('{{ url_for('static', filename='images/hero.jpg') }}') center/cover no-repeat;">
+<div class="modal fade" id="testimonyModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header" style="background: var(--ministry-gold); color: white;">
@@ -344,8 +344,8 @@
       <form action="{{ url_for('submit_testimony') }}" method="POST">
         <div class="modal-body">
           <div class="mb-3"><label class="form-label">Your Name *</label><input type="text" name="name" class="form-control" required></div>
-          <div class="mb-3"><label class="form-label">Role (Optional)</label><input type="text" name="role" class="form-control"></div>
-          <div class="mb-3"><label class="form-label">Your Testimony *</label><textarea name="message" rows="5" class="form-control" required></textarea></div>
+          <div class="mb-3"><label class="form-label">Role (Optional)</label><input type="text" name="role" class="form-control" placeholder="e.g., Youth Member, Volunteer"></div>
+          <div class="mb-3"><label class="form-label">Your Testimony *</label><textarea name="message" rows="5" class="form-control" required placeholder="Share how God has worked in your life..."></textarea></div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -356,43 +356,76 @@
   </div>
 </div>
 
-<!-- NEW: PARTNERSHIP MODAL -->
+<!-- PARTNERSHIP MODAL -->
 <div class="modal fade" id="partnershipModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header text-white" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6);">
-        <h5 class="modal-title">Become a Ministry Partner</h5>
+        <h5 class="modal-title">🤝 Become a Ministry Partner</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
       <form action="{{ url_for('submit_partnership') }}" method="POST">
         <div class="modal-body">
-          <p class="lead text-center mb-4">Let’s advance the Kingdom together!</p>
+          <p class="lead text-center mb-4">Let's advance the Kingdom together!</p>
           <div class="row g-3">
-            <div class="col-md-6"><label class="form-label">Organization / Church Name *</label><input type="text" name="org_name" class="form-control" required></div>
-            <div class="col-md-6"><label class="form-label">Contact Person *</label><input type="text" name="contact_person" class="form-control" required></div>
-            <div class="col-md-6"><label class="form-label">Email *</label><input type="email" name="email" class="form-control" required></div>
-            <div class="col-md-6"><label class="form-label">Phone *</label><input type="tel" name="phone" class="form-control" required></div>
+            <div class="col-md-6">
+              <label class="form-label">Organization / Church Name *</label>
+              <input type="text" name="org_name" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Contact Person *</label>
+              <input type="text" name="contact_person" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email *</label>
+              <input type="email" name="email" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Phone</label>
+              <input type="tel" name="phone" class="form-control">
+            </div>
             <div class="col-12">
-              <label class="form-label">Partnership Interests *</label>
+              <label class="form-label">Partnership Interests (Select all that apply)</label>
               <div class="row g-3">
                 <div class="col-md-6">
-                  <div class="form-check"><input class="form-check-input" type="checkbox" name="interests" value="Joint Crusades" id="c1"><label class="form-check-label" for="c1">Joint Crusades & Events</label></div>
-                  <div class="form-check"><input class="form-check-input" type="checkbox" name="interests" value="Mission Trips" id="c2"><label class="form-check-label" for="c2">Mission Trips</label></div>
-                  <div class="form-check"><input class="form-check-input" type="checkbox" name="interests" value="Prayer Partnership" id="c3"><label class="form-check-label" for="c3">Prayer Partnership</label></div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="interests" value="Joint Crusades" id="c1">
+                    <label class="form-check-label" for="c1">Joint Crusades & Events</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="interests" value="Mission Trips" id="c2">
+                    <label class="form-check-label" for="c2">Mission Trips</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="interests" value="Prayer Partnership" id="c3">
+                    <label class="form-check-label" for="c3">Prayer Partnership</label>
+                  </div>
                 </div>
                 <div class="col-md-6">
-                  <div class="form-check"><input class="form-check-input" type="checkbox" name="interests" value="Resource Sharing" id="c4"><label class="form-check-label" for="c4">Resource Sharing</label></div>
-                  <div class="form-check"><input class="form-check-input" type="checkbox" name="interests" value="Financial Support" id="c5"><label class="form-check-label" for="c5">Financial Support</label></div>
-                  <div class="form-check"><input class="form-check-input" type="checkbox" name="interests" value="Church Planting" id="c6"><label class="form-check-label" for="c6">Church Planting</label></div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="interests" value="Resource Sharing" id="c4">
+                    <label class="form-check-label" for="c4">Resource Sharing</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="interests" value="Financial Support" id="c5">
+                    <label class="form-check-label" for="c5">Financial Support</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="interests" value="Church Planting" id="c6">
+                    <label class="form-check-label" for="c6">Church Planting</label>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="col-12"><label class="form-label">Your Vision for Partnership</label><textarea name="vision" rows="5" class="form-control" placeholder="How would you like to partner with us?"></textarea></div>
+            <div class="col-12">
+              <label class="form-label">Your Vision for Partnership</label>
+              <textarea name="vision" rows="5" class="form-control" placeholder="How would you like to partner with us to advance the Kingdom?"></textarea>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary btn-lg px-5">Submit Request</button>
+          <button type="submit" class="btn btn-primary btn-lg px-5">Submit Partnership Request</button>
         </div>
       </form>
     </div>
