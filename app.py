@@ -8,14 +8,14 @@ from email.mime.multipart import MIMEMultipart
 import traceback
 
 # ==================== EMAIL CONFIG ====================
-MINISTRY_EMAIL = "onyangoodhiambo49@gmail.com"
-EMAIL_PASSWORD = "getx qsmf zyxd ftxd"
+MINISTRY_EMAIL = os.environ.get("MINISTRY_EMAIL", "onyangoodhiambo49@gmail.com")
+EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD", "getx qsmf zyxd ftxd")
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 # =====================================================
 
 app = Flask(__name__)
-app.secret_key = 'your-secret-key-here-change-this'
+app.secret_key = os.environ.get("SECRET_KEY", "your-secret-key-here-change-this")
 app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -341,24 +341,47 @@ Glory to God!
 
 @app.route("/submit-partnership", methods=["POST"])
 def submit_partnership():
+    print("=" * 60)
+    print("🔍 PARTNERSHIP FORM SUBMITTED")
+    print("=" * 60)
+    
     try:
+        # Log all form data received
+        print("📋 FORM DATA RECEIVED:")
+        for key, value in request.form.items():
+            print(f"  {key}: {value}")
+        
         # Get all form data with defaults
         org_name = request.form.get("org_name", "").strip()
+        print(f"✅ org_name: '{org_name}'")
+        
         contact_person = request.form.get("contact_person", "").strip()
+        print(f"✅ contact_person: '{contact_person}'")
+        
         email = request.form.get("email", "").strip()
+        print(f"✅ email: '{email}'")
+        
         phone = request.form.get("phone", "").strip()
+        print(f"✅ phone: '{phone}'")
+        
         vision = request.form.get("vision", "").strip()
+        print(f"✅ vision: '{vision}'")
         
         # Safely get checkbox list - returns empty list if none selected
         interests = request.form.getlist("interests")
+        print(f"✅ interests: {interests}")
 
         # Validate required fields
         if not org_name or not contact_person or not email:
+            print("❌ VALIDATION FAILED: Missing required fields")
             flash("Please fill all required fields (Organization, Contact Person, and Email).", "error")
             return redirect(url_for("join_our_mission"))
 
+        print("✅ Validation passed")
+
         # Build interests text
         interests_text = ", ".join(interests) if interests else "None selected"
+        print(f"✅ interests_text: '{interests_text}'")
 
         # Build email body
         body = f"""
@@ -376,15 +399,27 @@ Vision/Message:
 They want to partner in the Gospel!
         """
         
+        print("📧 Attempting to send email...")
+        
         # Send email
         if send_email("NEW PARTNERSHIP REQUEST", body):
+            print("✅ Email sent successfully!")
             flash("Thank you! Your partnership request has been received. We will contact you soon!", "success")
         else:
+            print("⚠️ Email failed but continuing...")
             flash("Your request was received but email notification failed. We'll still process it!", "warning")
 
+        print("✅ Partnership submission completed successfully")
+        print("=" * 60)
+
     except Exception as e:
-        print(f"❌ PARTNERSHIP ERROR: {str(e)}")
+        print("=" * 60)
+        print(f"❌❌❌ CRITICAL ERROR IN PARTNERSHIP FORM ❌❌❌")
+        print(f"Error type: {type(e).__name__}")
+        print(f"Error message: {str(e)}")
+        print("Full traceback:")
         traceback.print_exc()
+        print("=" * 60)
         flash("Something went wrong. Please try again or contact us directly.", "error")
 
     return redirect(url_for("join_our_mission"))
@@ -642,6 +677,21 @@ def test_email():
             return "❌ Email failed to send. Check console for errors."
     except Exception as e:
         return f"❌ Error: {str(e)}"
+
+@app.route("/test-partnership-debug")
+def test_partnership_debug():
+    """Test route to see if the partnership page loads"""
+    return f"""
+    <h1>Partnership Form Debug Info</h1>
+    <ul>
+        <li>Email configured: {MINISTRY_EMAIL}</li>
+        <li>SMTP Server: {SMTP_SERVER}:{SMTP_PORT}</li>
+        <li>Flask secret key set: {'Yes' if app.secret_key else 'No'}</li>
+        <li>Session support: {'Yes' if 'session' in dir() else 'No'}</li>
+    </ul>
+    <p><a href="{url_for('join_our_mission')}">Go to Join Our Mission page</a></p>
+    <p><a href="{url_for('test_email')}">Test Email Function</a></p>
+    """
 
 @app.errorhandler(404)
 def page_not_found(e):
