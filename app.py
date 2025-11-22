@@ -85,13 +85,18 @@ def send_email(subject, body):
         msg['To'] = MINISTRY_EMAIL
         msg['Subject'] = subject
         msg.attach(MIMEText(body, 'plain', 'utf-8'))
-        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+        
+        # Set a timeout to prevent hanging
+        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT, timeout=10)
         server.starttls()
         server.login(MINISTRY_EMAIL, EMAIL_PASSWORD)
         server.sendmail(MINISTRY_EMAIL, MINISTRY_EMAIL, msg.as_string())
         server.quit()
         print(f"✅ Email sent successfully: {subject}")
         return True
+    except smtplib.SMTPException as e:
+        print(f"⚠️ SMTP ERROR (blocked by hosting): {e}")
+        return False
     except Exception as e:
         print(f"❌ EMAIL FAILED: {e}")
         traceback.print_exc()
@@ -232,6 +237,26 @@ def children_youth():
     )
 
 # ==================== ALL FORM SUBMISSIONS → EMAIL ====================
+
+# Partnership data storage
+PARTNERSHIPS_FILE = os.path.join(BASE_DIR, 'partnerships.json')
+
+def save_partnership(data):
+    """Save partnership data to JSON file"""
+    partnerships = []
+    if os.path.exists(PARTNERSHIPS_FILE):
+        try:
+            with open(PARTNERSHIPS_FILE, 'r', encoding='utf-8') as f:
+                partnerships = json.load(f)
+        except:
+            partnerships = []
+    
+    partnerships.insert(0, data)
+    
+    with open(PARTNERSHIPS_FILE, 'w', encoding='utf-8') as f:
+        json.dump(partnerships, f, indent=2, ensure_ascii=False)
+    
+    print(f"✅ Partnership saved to {PARTNERSHIPS_FILE}")
 
 @app.route("/submit-volunteer", methods=["POST"])
 def submit_volunteer():
@@ -383,6 +408,18 @@ def submit_partnership():
         interests_text = ", ".join(interests) if interests else "None selected"
         print(f"✅ interests_text: '{interests_text}'")
 
+        # Save to JSON file first (so we don't lose data if email fails)
+        partnership_data = {
+            "org_name": org_name,
+            "contact_person": contact_person,
+            "email": email,
+            "phone": phone,
+            "interests": interests,
+            "vision": vision,
+            "submitted_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        save_partnership(partnership_data)
+
         # Build email body
         body = f"""
 NEW PARTNERSHIP REQUEST!
@@ -401,13 +438,17 @@ They want to partner in the Gospel!
         
         print("📧 Attempting to send email...")
         
-        # Send email
-        if send_email("NEW PARTNERSHIP REQUEST", body):
-            print("✅ Email sent successfully!")
+        # Try to send email but don't let it crash the app
+        try:
+            if send_email("NEW PARTNERSHIP REQUEST", body):
+                print("✅ Email sent successfully!")
+                flash("Thank you! Your partnership request has been received. We will contact you soon!", "success")
+            else:
+                print("⚠️ Email failed but form saved")
+                flash("Thank you! Your partnership request has been received. We will contact you soon!", "success")
+        except Exception as email_error:
+            print(f"⚠️ Email exception caught: {email_error}")
             flash("Thank you! Your partnership request has been received. We will contact you soon!", "success")
-        else:
-            print("⚠️ Email failed but continuing...")
-            flash("Your request was received but email notification failed. We'll still process it!", "warning")
 
         print("✅ Partnership submission completed successfully")
         print("=" * 60)
@@ -612,6 +653,23 @@ def load_fellowship_data():
 def save_fellowship_data(data):
     with open(FELLOWSHIP_DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
+
+@app.route("/admin-partnerships")
+def admin_partnerships():
+    """View all partnership submissions"""
+    if not session.get('admin_logged_in'):
+        flash("Please login first", "error")
+        return redirect(url_for("admin_login"))
+    
+    partnerships = []
+    if os.path.exists(PARTNERSHIPS_FILE):
+        try:
+            with open(PARTNERSHIPS_FILE, 'r', encoding='utf-8') as f:
+                partnerships = json.load(f)
+        except:
+            partnerships = []
+    
+    return render_template("admin_partnerships.html", partnerships=partnerships)
 
 @app.route("/admin-fellowship")
 def admin_fellowship():
